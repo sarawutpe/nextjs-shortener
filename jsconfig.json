@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+
+      "@/redux/*": ["redux/*"],
+      "@/styles/*": ["styles/*"],
+      "@/templates/*": ["templates/*"],
+      // "@/services/*": ["services/*"],
+      // "@/utils/*": ["utils/*"],
+      // "@/store/*": ["store/*"],
+      "@/utils/*": ["utils/*"],
+      // "@/styles/*": ["styles/*"]
+
+    }
+  }
+}
