@@ -1,18 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
 import Head from 'next/head';
-
+import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-
 import { addUrl, getLinkStatistic } from '@/redux/features/urlSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
-
 import styles from '@/styles/Home.module.css';
 import Header from '@/templates/Header';
 import Main from '@/templates/Main';
 import Footer from '@/templates/Footer';
-
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -20,16 +15,13 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import { borderRadius } from '@mui/system';
 
 const Home = () => {
   const dispatch = useDispatch();
 
   const urlStatistic = useSelector((state) => state.url.urlStatistic);
-
   const [urlHistory, setUrlHistory] = useState([]);
   const [copied, setCopied] = useState('');
 
@@ -53,7 +45,7 @@ const Home = () => {
           values.url
         )
       ) {
-        errors.url = 'Invalid URL';
+        errors.url = true;
       }
 
       return errors;
@@ -92,7 +84,6 @@ const Home = () => {
       <Head>
         <title>Create Next App</title>
       </Head>
-
       <Header />
       <Main>
         {/* generate url */}
@@ -115,7 +106,6 @@ const Home = () => {
             </Button>
           </Stack>
         </form>
-
         {/* url history */}
         <Box display="flex" flexDirection="column" mt={3} mb={8}>
           {urlHistory.length ? (
@@ -124,7 +114,7 @@ const Home = () => {
                 <Box
                   sx={{
                     display: 'grid',
-                    gridTemplateColumns: '700px 300px 1fr',
+                    gridTemplateColumns: '700px 280px 1fr',
                     gap: 2,
                     alignItems: 'center',
                     background: '#edf2fe',
@@ -138,28 +128,22 @@ const Home = () => {
                       {row.url}
                     </Typography>
                   </Box>
-
-                  <Box>
-                    <Link
-                      className={styles.textellipsis}
-                      href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
-                      underline="none"
-                      mr={1}
-                      width={250}
-                      maxWidth={250}
-                    >
+                  <Link
+                    href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
+                    underline="hover"
+                  >
+                    <Typography variant="body1" className={styles.textellipsis} mr={1}>
                       {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
-                    </Link>
-                  </Box>
-
+                    </Typography>
+                  </Link>
                   <Box>
                     <CopyToClipboard text={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}>
                       <Button
-                        sx={{ width: 100 }}
                         onClick={() => handelCopied(row.id)}
                         type="button"
                         variant="contained"
                         color={copied === row.id ? 'success' : 'primary'}
+                        fullWidth
                       >
                         {copied === row.id ? 'Copied' : 'Copy'}
                       </Button>
@@ -172,10 +156,9 @@ const Home = () => {
             <></>
           )}
         </Box>
-
         {/* url statistic */}
-        <Box display="flex" justifyContent="space-between">
-          <Card>
+        <Stack direction="row" spacing={2}>
+          <Card sx={{ width: '100%' }}>
             <Box display="flex" alignItems="center">
               <Box py={2} px={4}>
                 <BarChartIcon color="success" fontSize="large" />
@@ -188,7 +171,20 @@ const Home = () => {
               </Box>
             </Box>
           </Card>
-        </Box>
+          <Card sx={{ width: '100%' }}>
+            <Box display="flex" alignItems="center">
+              <Box py={2} px={4}>
+                <CompareArrowsIcon color="error" fontSize="large" />
+              </Box>
+              <Box py={2} px={4}>
+                <Typography variant="subtitle1">All Traffic</Typography>
+                <Typography variant="subtitle2" color="gray">
+                  {urlStatistic?.data?.all_traffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                </Typography>
+              </Box>
+            </Box>
+          </Card>
+        </Stack>
       </Main>
       <Footer />
     </>
