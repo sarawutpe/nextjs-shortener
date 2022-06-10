@@ -10,7 +10,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: ['Inter'].join(','),
+    fontFamily: ['Roboto'].join(','),
   },
 });
 

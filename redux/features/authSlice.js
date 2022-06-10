@@ -1,8 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import httpClient from '@/utils/HttpClient';
 import fetchJson from '@/hoc/fetchJson';
-import axios from 'axios';
-import Router from 'next/router';
 
 const initialState = {
   value: 0,
@@ -22,14 +20,6 @@ export const login = createAsyncThunk('auth/login', async (payload) => {
     }
   }
   return data;
-});
-
-export const logout = createAsyncThunk('auth/logout', async (payload) => {
-  const { data } = await axios.get('/api/logout');
-  if (data?.ok) {
-    const page = '/login';
-    window.location.href = page;
-  }
 });
 
 export const authSlice = createSlice({

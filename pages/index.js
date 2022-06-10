@@ -5,7 +5,7 @@ import { useFormik } from 'formik';
 import { addUrl, getLinkStatistic } from '@/redux/features/urlSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styles from '@/styles/Home.module.css';
-import Main from '@/templates/Main';
+import HomeTemplate from '@/templates/Main/Index';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -88,7 +88,7 @@ const Home = () => {
       <Head>
         <title>Create Next App</title>
       </Head>
-      <Main>
+      <HomeTemplate>
         {/* generate url */}
         <form onSubmit={formik.handleSubmit}>
           <Stack direction="row" spacing={2}>
@@ -134,6 +134,7 @@ const Home = () => {
                   <Link
                     href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
                     underline="hover"
+                    target="_blank"
                   >
                     <Typography variant="body1" className={styles.textellipsis} mr={1}>
                       {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
@@ -188,7 +189,7 @@ const Home = () => {
             </Box>
           </Card>
         </Stack>
-      </Main>
+      </HomeTemplate>
     </>
   );
 };

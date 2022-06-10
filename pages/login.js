@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '@/redux/features/authSlice';
 import { useFormik } from 'formik';
 import Avatar from '@mui/material/Avatar';
@@ -19,9 +19,7 @@ import FormControl from '@mui/material/FormControl';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import MuiBackdrop from 'components/MuiBackdrop';
 import useUser from '@/hoc/useUser';
-import axios from 'axios';
 
 const Login = () => {
   const { user, error } = useUser();
@@ -64,9 +62,9 @@ const Login = () => {
 
   useEffect(() => {
     // redirect if user is logged in
-    if (user?.isLoggedIn) {
-      router.push('/admin');
-    }
+    // if (user?.isLoggedIn) {
+    //   router.push('/admin');
+    // }
   }, [user]);
 
   if (error) return <div>failed to load</div>;

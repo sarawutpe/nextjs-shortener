@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import httpClient from '../../utils/HttpClient';
 
 const initialState = {
-  urlList: [],
   addUrl: {},
+  urlList: [],
   urlStatistic: {},
   value: 0,
 };
@@ -28,16 +28,23 @@ export const urlSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    // fullfiled, pending, rejected
+    builder.addCase(addUrl.fulfilled, (state, action) => {
+      state.addUrl = action.payload;
+    });
 
     // fullfiled, pending, rejected
     builder.addCase(getLink.fulfilled, (state, action) => {
       state.urlList = action.payload;
     });
 
-    // fullfiled, pending, rejected
-    builder.addCase(addUrl.fulfilled, (state, action) => {
-      state.addUrl = action.payload;
-    });
+    builder.addCase(getLink.pending, (state, action) => {
+      state.urlList = "pending";
+    })
+
+    // pending
+
+    // reject
 
     // fullfiled, pending, rejected
     builder.addCase(getLinkStatistic.fulfilled, (state, action) => {

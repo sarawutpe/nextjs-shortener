@@ -14,7 +14,7 @@ export async function getServerSideProps(context) {
     return {
       redirect: {
         destination: url,
-        permanent: true,
+        permanent: false,
       },
     };
   }
