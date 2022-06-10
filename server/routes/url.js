@@ -8,12 +8,17 @@ const Url = require('../models/urlModel');
 // create url
 router.post('/url', async (req, res) => {
   try {
-    const { url } = req.body;
+    const { url, shortUrl, view } = req.body;
     const uniqueUrl = customAlphabet(
       '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
       6
     );
-    const result = await Url.create({ url: url, shortUrl: uniqueUrl() });
+    const data = {
+      url: url,
+      shortUrl: shortUrl ? shortUrl : uniqueUrl(),
+      view: view,
+    };
+    const result = await Url.create(data);
     res.json({ ok: true, result: result });
   } catch (error) {
     res.json({ ok: false, error: error.name });
@@ -84,9 +89,26 @@ router.put('/url/:id', async (req, res) => {
 // delete url
 router.delete('/url/:id', async (req, res) => {
   try {
+    console.log(req);
+
     const result = Url.destroy({
       where: { id: req.params.id },
     });
+    res.json({ ok: true, data: result });
+  } catch (error) {
+    res.json({ ok: true, data: error.name });
+  }
+});
+
+// multi delete url
+router.put('/url', async (req, res) => {
+  try {
+    const { urlList } = req.body;
+    if (urlList.length) {
+      for await (const id of urlList) {
+        await Url.destroy({ where: { id: id } });
+      }
+    }
     res.json({ ok: true, data: result });
   } catch (error) {
     res.json({ ok: true, data: error.name });

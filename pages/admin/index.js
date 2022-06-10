@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useRouter } from 'next/router';
 import { useFormik } from 'formik';
 
 import {
@@ -20,9 +21,10 @@ import EditIcon from '@mui/icons-material/Edit';
 
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import Paper from '@mui/material/Paper';
 
 import useUser from '@/hoc/useUser';
-import { addUrl, getLinkStatistic } from '@/redux/features/urlSlice';
+import { addUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/features/urlSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
 import { getLink } from '@/redux/features/urlSlice';
 
@@ -31,6 +33,8 @@ import MuiDialog from '@/components/MuiDialog';
 const Admin = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
+  const router = useRouter;
+
   const urlList = useSelector((state) => state.url.urlList);
 
   // add mode dialog
@@ -60,13 +64,32 @@ const Admin = () => {
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
-        <GridToolbarColumnsButton />
-        <GridToolbarFilterButton />
-        <GridToolbarDensitySelector />
-        <GridToolbarExport />
-        <IconButton onClick={handleOpenAddDialog} sx={{ position: 'absolute', top: 4, right: 4 }}>
-          <AddIcon color="primary" />
-        </IconButton>
+        <div style={{ marginRight: 8 }}>
+          <GridToolbarColumnsButton />
+          <GridToolbarFilterButton />
+          <GridToolbarDensitySelector />
+          <GridToolbarExport />
+        </div>
+        <Stack mr={1} direction="row" spacing={1}>
+          <Button onClick={handleOpenAddDialog} variant="text" size="small" startIcon={<AddIcon />}>
+            เพิ่มลิ้งก์
+          </Button>
+          <Button
+            onClick={() => {
+              if (deleteUrlList.length) {
+                if (confirm(`คุณต้องการลบทั้งหมด ${deleteUrlList.length} รายการ`)) {
+                  dispatch(multiDeleteUrl({ urlList: deleteUrlList }));
+                }
+              }
+            }}
+            variant="text"
+            size="small"
+            disabled={!deleteUrlList.length}
+            startIcon={<DeleteIcon />}
+          >
+            ลบทั้งหมด {deleteUrlList.length}
+          </Button>
+        </Stack>
       </GridToolbarContainer>
     );
   }
@@ -93,7 +116,13 @@ const Admin = () => {
           >
             <EditIcon />
           </IconButton>
-          <IconButton>
+          <IconButton
+            onClick={() => {
+              if (confirm(`คุณต้องการลบลิ้งก์ไอดี ${row.id}`)) {
+                dispatch(deleteUrl({ id: row.id }));
+              }
+            }}
+          >
             <DeleteIcon />
           </IconButton>
         </Stack>
@@ -101,152 +130,42 @@ const Admin = () => {
     },
   ];
 
-  const rows = [
-    {
-      id: 1,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 36,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 2,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 3,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 4,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 5,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 6,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 7,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 8,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 9,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 10,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 11,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 12,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 13,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 14,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-    {
-      id: 15,
-      url: 'https://translate.google.co.th',
-      shortUrl: 'GEkmNZ',
-      view: 35,
-      createdAt: '2022-06-08T18:52:47.000Z',
-      updatedAt: '2022-06-08T18:52:47.000Z',
-    },
-  ];
-
   const addFormik = useFormik({
     initialValues: {
+      id: '',
       url: '',
+      shortUrl: '',
+      view: 0,
     },
     validate: (values) => {
       const errors = {};
-      if (
-        values.url &&
+      if (!values.url) {
+        errors.url = 'Required';
+      } else if (
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
           values.url
         )
       ) {
-        errors.url = true;
+        errors.url = 'Invalid URL';
       }
-
+      if (values.shortUrl && !/[A-Za-z0-9]$/i.test(values.shortUrl)) {
+        errors.shortUrl = 'Enter A-Za-z0-9';
+      }
+      if (!values.view && values.view != 0) {
+        errors.view = 'Required';
+      } else if (!/^[1-9]+[0-9]*$|^0$/i.test(values.view)) {
+        errors.view = 'Invalid view';
+      }
       return errors;
     },
-    onSubmit: async (values, { setFieldValue }) => {
-      if (!values.url.trim()) return;
-      const res = await dispatch(addUrl({ url: values.url }));
-      if (res?.meta?.requestStatus === 'fulfilled') {
-        setFieldValue('url', '');
-      }
+    onSubmit: (values, { setFieldValue }) => {
+      handleCloseAddDialog();
+      const data = {
+        url: values.url,
+        shortUrl: values.shortUrl,
+        view: values.view,
+      };
+      dispatch(addUrl(data));
     },
   });
 
@@ -260,35 +179,35 @@ const Admin = () => {
     validate: (values) => {
       const errors = {};
       if (!values.url) {
-        errors.url = "Required";
-      } else if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(values.url)) {
-        errors.url = "Invalid URL";
+        errors.url = 'Required';
+      } else if (
+        !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
+          values.url
+        )
+      ) {
+        errors.url = 'Invalid URL';
       }
       if (!values.shortUrl) {
-        errors.shortUrl = "Required";
+        errors.shortUrl = 'Required';
       } else if (!/[A-Za-z0-9]$/i.test(values.shortUrl)) {
-        errors.shortUrl = "Enter A-Za-z0-9"
+        errors.shortUrl = 'Enter A-Za-z0-9';
       }
-      if (!values.view) {
-        errors.view = "Required";
-      } else if (!/^[1-9]+[0-9]*$/i.test(values.view)) {
-        errors.view = "Invalid view";
+      if (!values.view && values.view != 0) {
+        errors.view = 'Required';
+      } else if (!/^[1-9]+[0-9]*$|^0$/i.test(values.view)) {
+        errors.view = 'Invalid view';
       }
       return errors;
     },
-    onSubmit: async (values, { setFieldValue }) => {
-
+    onSubmit: (values, { setFieldValue }) => {
+      handleCloseEditDialog();
       const data = {
         id: values.id,
         url: values.url,
         shortUrl: values.shortUrl,
-        view: values.view
-      }
-
-      const res = await dispatch(addUrl({ url: values.url }));
-      if (res?.meta?.requestStatus === 'fulfilled') {
-        setFieldValue('url', '');
-      }
+        view: values.view,
+      };
+      dispatch(updateUrl(data));
     },
   });
 
@@ -296,27 +215,27 @@ const Admin = () => {
 
   useEffect(() => {
     dispatch(getLink());
-  }, []);
+  }, [dispatch, router]);
 
-  const [page, setpage] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
+  const [deleteUrlList, setDeleteUrlList] = useState([]);
 
   if (user?.auth) {
     return (
       <AdminTemplate>
         {/* table section */}
-        <div style={{ height: 600, width: '100%', background: 'white', padding: '8px' }}>
+        <div style={{ height: 600, width: '100%', padding: '8px' }}>
           <DataGrid
             components={{ Toolbar: CustomToolbar }}
-            // sx={{ overflowX: 'auto' }}
-            rows={rows}
+            sx={{ overflowX: 'auto', background: '#ffff' }}
+            rows={urlList?.data || []}
             columns={columns}
-            pageSize={page}
-            rowsPerPageOptions={[5, 10, 20]}
-            checkboxSelection
-            onSelectionModelChange={(rows) => {
-              console.log(rows);
-            }}
-            disableSelectionOnClick
+            pageSize={pageSize}
+            rowsPerPageOptions={[10, 20, 100]}
+            checkboxSelection={true}
+            onPageSizeChange={(pageSize) => setPageSize(pageSize)}
+            onSelectionModelChange={(rows) => setDeleteUrlList(rows)}
+            disableSelectionOnClick={true}
           />
         </div>
         {/* add section */}
@@ -331,6 +250,33 @@ const Admin = () => {
               fullWidth
               value={addFormik.values.url}
               error={addFormik.touched.url && addFormik.errors.url}
+              helperText={addFormik.touched.url && addFormik.errors.url}
+              onChange={addFormik.handleChange}
+              onBlur={addFormik.handleBlur}
+            />
+            <TextField
+              type="text"
+              variant="filled"
+              label="Short URL (Option)"
+              margin="none"
+              name="shortUrl"
+              fullWidth
+              value={addFormik.values.shortUrl}
+              error={addFormik.touched.shortUrl && addFormik.errors.shortUrl}
+              helperText={addFormik.touched.shortUrl && addFormik.errors.shortUrl}
+              onChange={addFormik.handleChange}
+              onBlur={addFormik.handleBlur}
+            />
+            <TextField
+              type="text"
+              variant="filled"
+              label="View"
+              margin="none"
+              name="view"
+              fullWidth
+              value={addFormik.values.view}
+              error={addFormik.touched.view && addFormik.errors.view}
+              helperText={addFormik.touched.view && addFormik.errors.view}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
             />
