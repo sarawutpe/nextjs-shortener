@@ -3,7 +3,6 @@ const router = express.Router();
 const { Sequelize } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
-// const jwt = require('../jwt');
 const Url = require('../models/urlModel');
 
 // create url

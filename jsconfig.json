@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-
+      "@/hoc/*": ["hoc/*"],
       "@/redux/*": ["redux/*"],
       "@/styles/*": ["styles/*"],
       "@/templates/*": ["templates/*"],

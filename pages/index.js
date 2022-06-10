@@ -5,9 +5,7 @@ import { useFormik } from 'formik';
 import { addUrl, getLinkStatistic } from '@/redux/features/urlSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styles from '@/styles/Home.module.css';
-import Header from '@/templates/Header';
 import Main from '@/templates/Main';
-import Footer from '@/templates/Footer';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -77,6 +75,12 @@ const Home = () => {
 
   useEffect(() => {
     dispatch(getLinkStatistic());
+    
+    // restore url history
+    const history = localStorage.getItem('urlHistory');
+    if (history) {
+      setUrlHistory(JSON.parse(history));
+    }
   }, []);
 
   return (
@@ -84,7 +88,6 @@ const Home = () => {
       <Head>
         <title>Create Next App</title>
       </Head>
-      <Header />
       <Main>
         {/* generate url */}
         <form onSubmit={formik.handleSubmit}>
@@ -177,16 +180,15 @@ const Home = () => {
                 <CompareArrowsIcon color="error" fontSize="large" />
               </Box>
               <Box py={2} px={4}>
-                <Typography variant="subtitle1">All Traffic</Typography>
+                <Typography variant="subtitle1">All Link</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {urlStatistic?.data?.all_traffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {urlStatistic?.data?.all_link.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>
           </Card>
         </Stack>
       </Main>
-      <Footer />
     </>
   );
 };

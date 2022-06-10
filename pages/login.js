@@ -1,4 +1,8 @@
 import React, { useEffect, useState } from 'react';
+import Head from 'next/head';
+import { useRouter } from 'next/router';
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from '@/redux/features/authSlice';
 import { useFormik } from 'formik';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -16,12 +20,18 @@ import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import MuiBackdrop from 'components/MuiBackdrop';
+import useUser from '@/hoc/useUser';
+import axios from 'axios';
 
 const Login = () => {
+  const { user, error } = useUser();
+  const dispatch = useDispatch();
+  const router = useRouter();
+
   const formik = useFormik({
     initialValues: {
-      username: '',
-      password: '',
+      username: 'admin',
+      password: '1234',
     },
     validate: (values) => {
       const errors = {};
@@ -33,17 +43,16 @@ const Login = () => {
       }
       return errors;
     },
-    onSubmit: async (values, { setFieldValue }) => {
+    onSubmit: (values, { setFieldValue }) => {
       const data = {
         username: values.username.trim(),
         password: values.password.trim(),
       };
-
-      alert(JSON.stringify(data));
+      dispatch(login(data));
     },
   });
 
-  const [hidePassword, setHidePassword] = useState(true);
+  const [hidePassword, setHidePassword] = useState(false);
 
   const handleClickShowPassword = () => {
     setHidePassword(!hidePassword);
@@ -53,6 +62,15 @@ const Login = () => {
     event.preventDefault();
   };
 
+  useEffect(() => {
+    // redirect if user is logged in
+    if (user?.isLoggedIn) {
+      router.push('/admin');
+    }
+  }, [user]);
+
+  if (error) return <div>failed to load</div>;
+  if (!user) return <></>;
   return (
     <>
       <Container component="main" maxWidth="xs">
@@ -80,8 +98,6 @@ const Login = () => {
                 type="text"
                 name="username"
                 value={formik.values.username}
-                error={formik.touched.username && formik.errors.username}
-                helperText={formik.touched.username && formik.errors.username}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
               />
