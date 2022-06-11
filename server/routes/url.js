@@ -46,7 +46,11 @@ router.post('/url', async (req, res) => {
 // get url
 router.get('/url', async (req, res) => {
   try {
-    const result = await Url.findAll({});
+    const result = await Url.findAll({
+      order: [
+        ['id', 'DESC']
+      ]
+    });
     res.json({ ok: true, data: result });
   } catch (error) {
     res.json({ ok: true, data: error.message });

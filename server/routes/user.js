@@ -32,9 +32,28 @@ router.put('/user/:id', async (req, res) => {
 });
 
 // update password
-router.put('/user/password', async (req, res) => {
+router.put('/user/password/:id', async (req, res) => {
   try {
-    res.json({ ok: true, data: '' });
+    const id = req.params.id;
+    const { currentPassword, newPassword } = req.body;
+    // check current password
+    const findUser = await User.findOne({ where: { id: id } });
+    const comparePassword = bcrypt.compareSync(currentPassword, findUser.password);
+    if (comparePassword) {
+      // hash new password
+      const hashPassword = bcrypt.hashSync(newPassword, 10);
+      const result = await User.update(
+        { password: hashPassword },
+        {
+          where: { id: id },
+        }
+      );
+      if (result[0]) {
+        res.json({ ok: true, data: 'Password has been updated' });
+      }
+    } else {
+      res.json({ ok: false, data: 'Invalid current password' });
+    }
   } catch (error) {
     res.json({ ok: false, data: error.name });
   }

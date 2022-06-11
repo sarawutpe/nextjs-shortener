@@ -20,7 +20,7 @@ export const categories = [
     id: 'Settings',
     children: [
       { id: 'Profile', path: '/admin/profile', icon: <SettingsIcon /> },
-      { id: 'Password', path: '/admin/password', icon: <KeyIcon /> },
+      { id: 'Password', path: '/admin/change_password', icon: <KeyIcon /> },
     ],
   },
   {

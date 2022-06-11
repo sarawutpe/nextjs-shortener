@@ -18,6 +18,12 @@ export const updateUser = createAsyncThunk('user/updateUser', async (payload) =>
   const { data } = await httpClient.put(`/user/${id}`, payload);
   return data;
 });
+
+export const updatePassword = createAsyncThunk('user/updatePassword', async (payload) => {
+  const id = payload.id;
+  const { data } = await httpClient.put(`/user/password/${id}`, payload);
+  return data;
+})
 // export const addUrl = createAsyncThunk('url/addUrl', async (payload) => {
 //   const { data } = await httpClient.post('/url', payload);
 //   if (data?.ok) {

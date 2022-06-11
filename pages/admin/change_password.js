@@ -9,10 +9,10 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useUser from '@/hoc/useUser';
-import { getUser, updateUser } from '@/redux/features/userSlice';
+import { updatePassword } from '@/redux/features/userSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
 
-const Profile = () => {
+const ChangePassword = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
   const router = useRouter;
@@ -20,43 +20,47 @@ const Profile = () => {
   const getUserState = useSelector((state) => state.user.getUserState);
 
   useEffect(() => {
-    dispatch(getUser({ id: user?.id }));
-  }, [dispatch, router, user]);
+    // dispatch(getUser({ id: user?.id }));
+  }, [dispatch, router]);
 
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
-      username: getUserState?.data?.username ?? '',
-      name: getUserState?.data?.name ?? '',
-      email: getUserState?.data?.email ?? '',
+      current_password: '',
+      new_password: '',
+      confirm_password: '',
     },
     validate: (values) => {
       const errors = {};
-      if (!values.username) {
-        errors.username = 'Required';
+      if (!values.current_password) {
+        errors.current_password = 'Required';
       }
-      if (!values.name) {
-        errors.name = 'Required';
+      if (!values.new_password) {
+        errors.new_password = 'Required';
       }
-      if (!values.email) {
-        errors.email = 'Required';
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(values.email)) {
-        errors.email = 'Invalid email address';
+      if (!values.confirm_password) {
+        errors.confirm_password = 'Required';
+      }
+      if (values.new_password != values.confirm_password) {
+        errors.new_password = true;
+        errors.confirm_password = 'Password do not match';
       }
       return errors;
     },
-    onSubmit: async (values) => {
+    onSubmit: async (values, { resetForm }) => {
       const data = {
         id: user?.id,
-        username: values.username,
-        name: values.name,
-        email: values.email,
+        currentPassword: values.current_password,
+        newPassword: values.new_password,
       };
-      const res = await dispatch(updateUser(data));
+      const res = await dispatch(updatePassword(data));
       // alert
       if (res?.payload?.ok) {
         toast.success(res?.payload?.data);
+      } else {
+        toast.error(res?.payload?.data);
       }
+      resetForm();
     },
   });
 
@@ -64,46 +68,46 @@ const Profile = () => {
     return (
       <AdminTemplate>
         <Head>
-          <title>Admin | Profile</title>
+          <title>Admin | Change Password</title>
         </Head>
         <Box sx={{ width: '100%' }}>
           <form onSubmit={formik.handleSubmit}>
             <TextField
-              type="text"
+              type="password"
               variant="filled"
-              label="Username"
+              label="Current"
               margin="none"
-              name="username"
+              name="current_password"
               fullWidth
-              value={formik.values.username}
-              error={formik.touched.username && formik.errors.username}
-              helperText={formik.touched.username && formik.errors.username}
+              value={formik.values.current_password}
+              error={formik.touched.current_password && formik.errors.current_password}
+              helperText={formik.touched.current_password && formik.errors.current_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
             <TextField
-              type="text"
+              type="password"
               variant="filled"
-              label="Name"
+              label="New"
               margin="none"
-              name="name"
+              name="new_password"
               fullWidth
-              value={formik.values.name}
-              error={formik.touched.name && formik.errors.name}
-              helperText={formik.touched.name && formik.errors.name}
+              value={formik.values.new_password}
+              error={formik.touched.new_password && formik.errors.new_password}
+              helperText={formik.touched.new_password && formik.errors.new_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
             <TextField
-              type="text"
+              type="password"
               variant="filled"
-              label="Email"
+              label="Re-type new"
               margin="none"
-              name="email"
+              name="confirm_password"
               fullWidth
-              value={formik.values.email}
-              error={formik.touched.email && formik.errors.email}
-              helperText={formik.touched.email && formik.errors.email}
+              value={formik.values.confirm_password}
+              error={formik.touched.confirm_password && formik.errors.confirm_password}
+              helperText={formik.touched.confirm_password && formik.errors.confirm_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
@@ -120,4 +124,4 @@ const Profile = () => {
   return <></>;
 };
 
-export default Profile;
+export default ChangePassword;

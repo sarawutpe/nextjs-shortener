@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { addUrl, getLinkStatistic } from '@/redux/features/urlSlice';
+import { addUrl, getUrlStatistic } from '@/redux/features/urlSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styles from '@/styles/Home.module.css';
 import HomeTemplate from '@/templates/Main/Index';
@@ -18,7 +18,6 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 const Home = () => {
   const dispatch = useDispatch();
-
   const urlStatistic = useSelector((state) => state.url.urlStatistic);
   const [urlHistory, setUrlHistory] = useState([]);
   const [copied, setCopied] = useState('');
@@ -52,9 +51,9 @@ const Home = () => {
       if (!values.url.trim()) return;
       const res = await dispatch(addUrl({ url: values.url }));
       if (res?.meta?.requestStatus === 'fulfilled') {
-        const id = res?.payload?.result.id ?? '';
-        const url = res?.payload?.result.url ?? '';
-        const shortUrl = res?.payload?.result.shortUrl ?? '';
+        const id = res?.payload?.data.id ?? '';
+        const url = res?.payload?.data.url ?? '';
+        const shortUrl = res?.payload?.data.shortUrl ?? '';
         const newUrlHistory = [];
         const finalUrlHistory = [];
         newUrlHistory = [{ id: id, url: url, shortUrl: shortUrl }, ...urlHistory];
@@ -74,8 +73,7 @@ const Home = () => {
   });
 
   useEffect(() => {
-    dispatch(getLinkStatistic());
-    
+    dispatch(getUrlStatistic());
     // restore url history
     const history = localStorage.getItem('urlHistory');
     if (history) {
