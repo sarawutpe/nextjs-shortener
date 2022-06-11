@@ -1,0 +1,27 @@
+# get user
+GET http://localhost:8085/api/v2/user/1 HTTP/1.1
+
+# update user
+PUT http://localhost:8085/api/v2/user HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "username": "admin3x   xx",
+    "name": "1234dddd",
+    "email": "1234d"
+}
+###
+
+# update password
+PUT http://localhost:8085/api/v2/user/password HTTP/1.1
+Content-Type: application/json
+
+{
+    "id": "1",
+    "username": "admin3x   xx",
+    "name": "1234dddd",
+    "email": "1234d"
+}
+###
+

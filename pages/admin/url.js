@@ -282,7 +282,7 @@ const Url = () => {
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
             />
-            <Stack mt={2} mb={1}>
+            <Stack my={2}>
               <Button type="submit" variant="contained" color="primary" fullWidth>
                 บันทึก
               </Button>
@@ -331,7 +331,7 @@ const Url = () => {
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
             />
-            <Stack mt={2} mb={1}>
+            <Stack my={2}>
               <Button
                 type="submit"
                 variant="contained"
