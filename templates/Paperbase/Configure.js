@@ -1,8 +1,5 @@
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AddLinkIcon from '@mui/icons-material/AddLink';
-
-import PeopleIcon from '@mui/icons-material/People';
-import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
 import KeyIcon from '@mui/icons-material/Key';
 import LogoutIcon from '@mui/icons-material/Logout';

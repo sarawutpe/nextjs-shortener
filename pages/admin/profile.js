@@ -24,7 +24,7 @@ import { addUrl, getUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/fe
 import AdminTemplate from '@/templates/Paperbase/Index';
 import MuiDialog from '@/components/MuiDialog';
 
-const Dashboard = () => {
+const Profile = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
   const router = useRouter;
@@ -48,4 +48,4 @@ const Dashboard = () => {
   return <></>;
 };
 
-export default Dashboard;
+export default Profile;

@@ -4,7 +4,6 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
-
 import {
   DataGrid,
   GridToolbarContainer,
@@ -13,22 +12,16 @@ import {
   GridToolbarExport,
   GridToolbarDensitySelector,
 } from '@mui/x-data-grid';
-
 import IconButton from '@mui/material/IconButton';
 import Stack from '@mui/material/Stack';
-
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-
 import useUser from '@/hoc/useUser';
 import { addUrl, getUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/features/urlSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
-
 import MuiDialog from '@/components/MuiDialog';
 
 const Url = () => {
@@ -36,11 +29,7 @@ const Url = () => {
   const dispatch = useDispatch();
   const router = useRouter;
 
-  const addUrlState = useSelector((state) => state.url?.addUrlState);
   const getUrlState = useSelector((state) => state.url?.getUrlState);
-  // const updateUrlState = useSelector((state) => state.url.updateUrlState);
-
-  console.log(addUrlState);
 
   // add mode dialog
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -64,8 +53,7 @@ const Url = () => {
     setOpenEditDialog(false);
   };
 
-  // TABLE
-
+  // DataGrid
   function CustomToolbar() {
     return (
       <GridToolbarContainer>
@@ -83,7 +71,7 @@ const Url = () => {
             onClick={() => {
               if (deleteUrlList.length) {
                 if (confirm(`คุณต้องการลบทั้งหมด ${deleteUrlList.length} รายการ`)) {
-                  dispatch(multiDeleteUrl({ getUrlList: deleteUrlList }));
+                  dispatch(multiDeleteUrl({ urlList: deleteUrlList }));
                 }
               }
             }}
@@ -223,8 +211,6 @@ const Url = () => {
     },
   });
 
-  // TABLE
-
   useEffect(() => {
     dispatch(getUrl());
   }, [dispatch, router]);
@@ -296,21 +282,13 @@ const Url = () => {
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
             />
-
             <Stack mt={2} mb={1}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-                // disabled={addNewsState.isFetching}
-              >
+              <Button type="submit" variant="contained" color="primary" fullWidth>
                 บันทึก
               </Button>
             </Stack>
           </form>
         </MuiDialog>
-
         {/* edit section */}
         <MuiDialog title="แก้ไขลิ้งก์" open={openEditDialog} onClose={handleCloseEditDialog}>
           <form onSubmit={editFormik.handleSubmit}>
@@ -359,7 +337,6 @@ const Url = () => {
                 variant="contained"
                 color="primary"
                 fullWidth
-                // disabled={addNewsState.isFetching}
               >
                 แก้ไข
               </Button>

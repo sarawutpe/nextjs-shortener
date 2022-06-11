@@ -5,6 +5,9 @@ import { store } from '@/redux/store';
 const initialState = {
   addUrlState: {},
   getUrlState: [],
+  updateUrlState: {},
+  deleteUrlState: {},
+  multiDeleteUrlState: {},
 };
 
 export const addUrl = createAsyncThunk('url/addUrl', async (payload) => {
@@ -20,7 +23,7 @@ export const getUrl = createAsyncThunk('url/getUrl', async () => {
   return data;
 });
 
-export const getLinkStatistic = createAsyncThunk('url/getLinkStatistic', async () => {
+export const getUrlStatistic = createAsyncThunk('url/getUrlStatistic', async () => {
   const { data } = await httpClient.get('/url/statistic');
   return data;
 });
@@ -47,43 +50,29 @@ export const urlSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // addUrl | fullfiled
+    // add url | fullfiled
     builder.addCase(addUrl.fulfilled, (state, action) => {
       state.addUrlState = action.payload;
     });
-    // addUrl | pending
-    builder.addCase(addUrl.pending, (state, action) => {
-      state.addUrlState = 'pending';
-    });
-    // addUrl | rejected
-    builder.addCase(addUrl.rejected, (state, action) => {
-      state.addUrlState = 'rejected';
-    });
-
-    // getUrl | fullfiled
+    // get url | fullfiled
     builder.addCase(getUrl.fulfilled, (state, action) => {
       state.getUrlState = action.payload;
     });
-    // getUrl | pending
-    builder.addCase(getUrl.pending, (state, action) => {
-      state.getUrlState = 'pending';
-    });
-    // getUrl | rejected
-    builder.addCase(getUrl.rejected, (state, action) => {
-      state.getUrlState = 'rejected';
-    });
-
-    // getUrl | rejected
-
-    // fullfiled, pending, rejected
-
-    // pending
-
-    // reject
-
-    // fullfiled, pending, rejected
-    builder.addCase(getLinkStatistic.fulfilled, (state, action) => {
+    // get url statistic | fullfiled
+    builder.addCase(getUrlStatistic.fulfilled, (state, action) => {
       state.urlStatistic = action.payload;
+    });
+    // update url | fullfiled
+    builder.addCase(updateUrl.fulfilled, (state, action) => {
+      state.updateUrlState = action.payload;
+    });
+    // delete url | fullfiled
+    builder.addCase(deleteUrl.fulfilled, (state, action) => {
+      state.deleteUrlState = action.payload;
+    });
+    // multi delete url | fullfiled
+    builder.addCase(multiDeleteUrl.fulfilled, (state, action) => {
+      state.multiDeleteUrlState = action.payload;
     });
   },
 });

@@ -39,7 +39,7 @@ router.post('/url', async (req, res) => {
       res.json({ ok: true, data: result });
     }
   } catch (error) {
-    res.json({ ok: false, error: error.name });
+    res.json({ ok: false, error: error.message });
   }
 });
 
@@ -49,7 +49,7 @@ router.get('/url', async (req, res) => {
     const result = await Url.findAll({});
     res.json({ ok: true, data: result });
   } catch (error) {
-    res.json({ ok: true, data: error.name });
+    res.json({ ok: true, data: error.message });
   }
 });
 
@@ -70,7 +70,7 @@ router.get('/url/short_url/:query', async (req, res) => {
       res.json({ ok: false, data: result });
     }
   } catch (error) {
-    res.json({ ok: false, data: error.name });
+    res.json({ ok: false, data: error.message });
   }
 });
 
@@ -88,7 +88,7 @@ router.get('/url/statistic', async (req, res) => {
     };
     res.json({ ok: true, data: data });
   } catch (error) {
-    res.json({ ok: false, data: error.name });
+    res.json({ ok: false, data: error.message });
   }
 });
 
@@ -100,21 +100,19 @@ router.put('/url/:id', async (req, res) => {
     });
     res.json({ ok: true, data: result });
   } catch (error) {
-    res.json({ ok: true, data: error.name });
+    res.json({ ok: true, data: error.message });
   }
 });
 
 // delete url
 router.delete('/url/:id', async (req, res) => {
   try {
-    console.log(req);
-
     const result = Url.destroy({
       where: { id: req.params.id },
     });
     res.json({ ok: true, data: result });
   } catch (error) {
-    res.json({ ok: true, data: error.name });
+    res.json({ ok: true, data: error.message });
   }
 });
 
@@ -127,9 +125,9 @@ router.put('/url', async (req, res) => {
         await Url.destroy({ where: { id: id } });
       }
     }
-    res.json({ ok: true, data: result });
+    res.json({ ok: true, data: '' });
   } catch (error) {
-    res.json({ ok: true, data: error.name });
+    res.json({ ok: true, data: error.message });
   }
 });
 
