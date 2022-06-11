@@ -168,7 +168,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Traffic</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {urlStatistic?.data?.all_traffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {urlStatistic?.data?.allTraffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>
@@ -181,7 +181,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Link</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {urlStatistic?.data?.all_link.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {urlStatistic?.data?.allLink.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>

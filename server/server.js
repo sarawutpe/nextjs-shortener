@@ -15,6 +15,13 @@ app.use('/api/v2', require('./routes/url'));
 // set timezone
 process.env.TZ = 'Asia/Bangkok';
 
+console.log(Date.now())
+
+console.log(new Date())
+
+
+// console.log(new Date().toLocaleString("en-US", {timeZone: "Asia/Bangkok"}))
+
 // port
 const PORT = process.env.PORT || 8085
 

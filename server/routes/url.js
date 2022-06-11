@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Sequelize } = require('sequelize');
+const { Sequelize, Op, NOW } = require('sequelize');
 const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
 const Url = require('../models/urlModel');
@@ -47,9 +47,7 @@ router.post('/url', async (req, res) => {
 router.get('/url', async (req, res) => {
   try {
     const result = await Url.findAll({
-      order: [
-        ['id', 'DESC']
-      ]
+      order: [['id', 'DESC']],
     });
     res.json({ ok: true, data: result });
   } catch (error) {
@@ -81,15 +79,99 @@ router.get('/url/short_url/:query', async (req, res) => {
 // get url statistic
 router.get('/url/statistic', async (req, res) => {
   try {
-    const allTraffic = await Url.findOne({
+    // all traffic
+    let allTraffic = await Url.findOne({
       attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
     });
-    const newAllTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
-    const allLink = await Url.count();
+    allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
+    // all link
+    let allLink = await Url.count();
+    // top traffic
+    let topTraffic = await Url.findOne({
+      attributes: [[Sequelize.fn('MAX', Sequelize.col('view')), 'top_traffic']],
+    });
+    topTraffic = parseInt(await topTraffic?.dataValues?.top_traffic);
+
+
+    // to day link
+    let todayLink = await Url.findAll({
+      attributes: [
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'links']
+      ],
+      where: {
+        createdAt: {
+          [Op.gte]: '2022-06-12'
+        }
+      }
+    })
+    
+    // historical chart
+    let historicalChart = await Url.findAll({
+      attributes: [
+        [Sequelize.col('createdAt'), 'date'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'link'],
+      ],
+      group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
+    });
+
     const data = {
-      all_traffic: newAllTraffic,
-      all_link: allLink,
+      allTraffic: allTraffic,
+      allLink: allLink,
+      topTraffic: topTraffic,
+      topdayLink: todayLink,
+      historicalChart: historicalChart,
     };
+
+    res.json({ ok: true, data: data });
+
+    // // all traffic
+    // let allTraffic = await Url.findOne({
+    //   attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
+    // });
+    // allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
+    // // all link
+    // let allLink = await Url.count();
+    // const data = {
+    //   allTraffic: allTraffic,
+    //   allLink: allLink,
+    // };
+    // res.json({ ok: true, data: data });
+  } catch (error) {
+    res.json({ ok: false, data: error.message });
+  }
+});
+
+// get url all statistic
+router.get('/url/allstatistic', async (req, res) => {
+  try {
+    // all traffic
+    let allTraffic = await Url.findOne({
+      attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
+    });
+    allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
+    // all link
+    let allLink = await Url.count();
+    // top traffic
+    let topTraffic = await Url.findOne({
+      attributes: [[Sequelize.fn('MAX', Sequelize.col('view')), 'top_traffic']],
+    });
+    topTraffic = parseInt(await topTraffic?.dataValues?.top_traffic);
+    // historical chart
+    let historicalChart = await Url.findAll({
+      attributes: [
+        [Sequelize.col('createdAt'), 'date'],
+        [Sequelize.fn('COUNT', Sequelize.col('id')), 'links'],
+      ],
+      group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
+    });
+
+    const data = {
+      allTraffic: allTraffic,
+      allLink: allLink,
+      topTraffic: topTraffic,
+      historicalChart: historicalChart,
+    };
+
     res.json({ ok: true, data: data });
   } catch (error) {
     res.json({ ok: false, data: error.message });
