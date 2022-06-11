@@ -8,7 +8,6 @@ export const store = configureStore({
     auth: authReducer,
     counter: counterReducer,
     url: urlReducer,
-    devTools: process.env.NODE_ENV !== 'production',
-    // devTools: process.env.NODE_ENV === 'development',
+    devTools: process.env.NODE_ENV === 'development',
   },
 });

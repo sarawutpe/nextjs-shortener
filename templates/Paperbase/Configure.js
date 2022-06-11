@@ -1,3 +1,6 @@
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import AddLinkIcon from '@mui/icons-material/AddLink';
+
 import PeopleIcon from '@mui/icons-material/People';
 import DnsRoundedIcon from '@mui/icons-material/DnsRounded';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -10,28 +13,21 @@ export const categories = [
     children: [
       {
         id: 'Dashboard',
-        path: 'admin/',
-        icon: <PeopleIcon />,
+        path: '/admin',
+        icon: <DashboardIcon />,
       },
-      { id: 'Database', path: 'admin/dashboard', icon: <DnsRoundedIcon /> },
+      { id: 'URL', path: '/admin/url', icon: <AddLinkIcon /> },
     ],
   },
   {
     id: 'Settings',
     children: [
-      { id: 'Profile', path: 'admin/profile', icon: <SettingsIcon /> },
-      { id: 'Password', path: 'admin/password', icon: <KeyIcon /> },
+      { id: 'Profile', path: '/admin/profile', icon: <SettingsIcon /> },
+      { id: 'Password', path: '/admin/password', icon: <KeyIcon /> },
     ],
   },
   {
     id: 'More',
-    children: [{ id: 'Logout', path: 'admin/logout', icon: <LogoutIcon /> }],
+    children: [{ id: 'Logout', path: '/admin/logout', icon: <LogoutIcon /> }],
   },
 ];
-
-
-
-
-
-
-

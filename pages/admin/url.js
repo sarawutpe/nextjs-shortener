@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
+import { toast } from 'react-toastify';
 
 import {
   DataGrid,
@@ -25,18 +26,21 @@ import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 
 import useUser from '@/hoc/useUser';
-import { addUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/features/urlSlice';
+import { addUrl, getUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/features/urlSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
-import { getLink } from '@/redux/features/urlSlice';
 
 import MuiDialog from '@/components/MuiDialog';
 
-const Admin = () => {
+const Url = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
   const router = useRouter;
 
-  const urlList = useSelector((state) => state.url.urlList);
+  const addUrlState = useSelector((state) => state.url?.addUrlState);
+  const getUrlState = useSelector((state) => state.url?.getUrlState);
+  // const updateUrlState = useSelector((state) => state.url.updateUrlState);
+
+  console.log(addUrlState);
 
   // add mode dialog
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -79,7 +83,7 @@ const Admin = () => {
             onClick={() => {
               if (deleteUrlList.length) {
                 if (confirm(`คุณต้องการลบทั้งหมด ${deleteUrlList.length} รายการ`)) {
-                  dispatch(multiDeleteUrl({ urlList: deleteUrlList }));
+                  dispatch(multiDeleteUrl({ getUrlList: deleteUrlList }));
                 }
               }
             }}
@@ -161,14 +165,19 @@ const Admin = () => {
       }
       return errors;
     },
-    onSubmit: (values, { setFieldValue }) => {
+    onSubmit: async (values, { resetForm }) => {
       handleCloseAddDialog();
       const data = {
         url: values.url,
         shortUrl: values.shortUrl,
         view: values.view,
       };
-      dispatch(addUrl(data));
+      const res = await dispatch(addUrl(data));
+      // alert
+      if (!res?.payload?.ok) {
+        toast.error(res?.payload.data);
+      }
+      resetForm();
     },
   });
 
@@ -202,7 +211,7 @@ const Admin = () => {
       }
       return errors;
     },
-    onSubmit: (values, { setFieldValue }) => {
+    onSubmit: (values) => {
       handleCloseEditDialog();
       const data = {
         id: values.id,
@@ -217,7 +226,7 @@ const Admin = () => {
   // TABLE
 
   useEffect(() => {
-    dispatch(getLink());
+    dispatch(getUrl());
   }, [dispatch, router]);
 
   const [pageSize, setPageSize] = useState(10);
@@ -227,14 +236,15 @@ const Admin = () => {
     return (
       <AdminTemplate>
         <Head>
-          <title>Admin | Dashboard</title>
+          <title>Admin | URL</title>
         </Head>
+
         {/* table section */}
         <div style={{ height: 600, width: '100%', padding: '8px' }}>
           <DataGrid
             components={{ Toolbar: CustomToolbar }}
             sx={{ overflowX: 'auto', background: '#ffff' }}
-            rows={urlList?.data || []}
+            rows={getUrlState?.data || []}
             columns={columns}
             pageSize={pageSize}
             rowsPerPageOptions={[10, 20, 100]}
@@ -362,4 +372,4 @@ const Admin = () => {
   return <></>;
 };
 
-export default Admin;
+export default Url;

@@ -5,6 +5,18 @@ const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
 const Url = require('../models/urlModel');
 
+const shortUrlExists = async (shortUrl) => {
+  try {
+    const result = await Url.findOne({ where: { shortUrl: shortUrl } });
+    if (result) {
+      throw new Error('Short URL already exists');
+    }
+    return;
+  } catch (error) {
+    return error.message;
+  }
+};
+
 // create url
 router.post('/url', async (req, res) => {
   try {
@@ -18,8 +30,14 @@ router.post('/url', async (req, res) => {
       shortUrl: shortUrl ? shortUrl : uniqueUrl(),
       view: view,
     };
-    const result = await Url.create(data);
-    res.json({ ok: true, result: result });
+    // check short url already exists
+    const checkShortUrlExists = await shortUrlExists(data.shortUrl);
+    if (checkShortUrlExists) {
+      res.json({ ok: false, data: checkShortUrlExists });
+    } else {
+      const result = await Url.create(data);
+      res.json({ ok: true, data: result });
+    }
   } catch (error) {
     res.json({ ok: false, error: error.name });
   }

@@ -9,7 +9,7 @@ Content-Type: application/json
 
 {
     "url": "https://name.com",
-    "shortUrl": ""
+    "shortUrl": "test"
 }
 ###
 
