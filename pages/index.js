@@ -86,7 +86,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Create Next App</title>
+        <title>Free URL Shortener</title>
       </Head>
       <HomeTemplate>
         {/* generate link */}
@@ -108,7 +108,7 @@ const Home = () => {
               onBlur={formik.handleBlur}
             />
             <Button sx={{ minWidth: 200 }} type="submit" variant="contained" color="primary">
-              Shorten
+              Shorten (ย่อลิ้งก์)
             </Button>
           </Stack>
         </form>
@@ -118,15 +118,7 @@ const Home = () => {
           {linkHistory.length ? (
             linkHistory.map((row, index) => (
               <Box key={index} sx={{ width: '100%' }}>
-                <Grid
-                  sx={{}}
-                  mb={1}
-                  bgcolor="#edf2fe"
-                  borderRadius={2}
-                  container
-                  alignItems="center"
-                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
-                >
+                <Grid mb={1} bgcolor="#edf2fe" borderRadius={2} container alignItems="center">
                   <Grid item xs={12} sm={12} md={5}>
                     <Box p={1}>
                       <Typography variant="body1" className={styles.textellipsis}>
