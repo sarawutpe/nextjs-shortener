@@ -3,6 +3,7 @@ import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { Chart } from 'react-google-charts';
+import { formatUtil } from '@/utils/formatUtil';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
@@ -38,13 +39,8 @@ const Dashboard = () => {
           data.push(['Date', 'Links']);
           for (let i = 0; i < chart.length; i++) {
             // parse to local th date
-            const date = new Date(chart[i].date);
-            const localDate = date.toLocaleDateString('th-TH', {
-              year: 'numeric',
-              month: 'numeric',
-              day: 'numeric',
-            });
-            data.push([localDate, chart[i].link]);
+            const date = formatUtil.getLocalDate(chart[i].date);
+            data.push([date, chart[i].link]);
             resolve();
           }
           setChartData(data);
@@ -175,7 +171,7 @@ const Dashboard = () => {
                 options={{
                   chart: {
                     title: `สถิติย้อนหลัง ${chartRange}`,
-                    subtitle: `จำนวนข้อมูลทั้งหมด ${chartData.length || 0} รายการ`,
+                    subtitle: `จำนวนข้อมูลทั้งหมด ${chartData.length - 1 || 0} รายการ`,
                   },
                 }}
               />

@@ -116,15 +116,19 @@ router.get('/link/statistic/:range', async (req, res) => {
       },
     });
     todayLink = parseInt(await todayLink?.dataValues?.link);
+
     // historical chart
     const setRange = range == '1D' ? 1 : range == '7D' ? 7 : range == '30D' ? 30 : allLink;
     let historicalChart = await Link.findAll({
-      limit: setRange,
+      // limit: setRange,
       attributes: [
         [Sequelize.col('createdAt'), 'date'],
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'link'],
+        [Sequelize.fn('COUNT', Sequelize.col('*')), 'link'],
       ],
-      group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
+      where: Sequelize.literal(
+        `(createdAt BETWEEN DATE_ADD(CURRENT_DATE, INTERVAL - ${setRange}+1 DAY) AND DATE_ADD(CURRENT_DATE, INTERVAL 1 DAY))`
+      ),
+      group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });
     const data = {
       allTraffic: allTraffic || 0,

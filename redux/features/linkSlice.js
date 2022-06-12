@@ -26,7 +26,7 @@ export const getLink = createAsyncThunk('link/getLink', async () => {
 export const getLinkStatistic = createAsyncThunk('link/getLinkStatistic', async (payload) => {
   const range = payload?.range;
   if (range) {
-    const { data } = await httpClient.get(`/link/statistic/${'7D'}`);
+    const { data } = await httpClient.get(`/link/statistic/${range}`);
     return data;
   } else {
     const { data } = await httpClient.get('/link/statistic');

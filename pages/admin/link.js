@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
 import { toast } from 'react-toastify';
+import { formatUtil } from '@/utils/formatUtil';
 import {
   DataGrid,
   GridToolbarContainer,
@@ -29,6 +30,7 @@ import {
 } from '@/redux/features/linkSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
 import MuiDialog from '@/components/MuiDialog';
+
 
 const Link = () => {
   const { user } = useUser();
@@ -98,8 +100,18 @@ const Link = () => {
     { field: 'link', headerName: 'Link', width: 300 },
     { field: 'shortLink', headerName: 'Short Link', width: 120 },
     { field: 'view', headerName: 'View', width: 120 },
-    { field: 'createdAt', headerName: 'Created At', width: 160 },
-    { field: 'updatedAt', headerName: 'Updated At', width: 160 },
+    {
+      field: 'createdAt',
+      headerName: 'Created At',
+      width: 160,
+      renderCell: ({ row }) => <>{formatUtil.getLocalDate(row.createdAt)}</>,
+    },
+    {
+      field: 'updatedAt',
+      headerName: 'Updated At',
+      width: 160,
+      renderCell: ({ row }) => <>{formatUtil.getLocalDate(row.updatedAt)}</>,
+    },
     {
       field: 'action',
       headerName: 'Action',
@@ -216,7 +228,7 @@ const Link = () => {
       const res = await dispatch(updateLink(data));
       // alert
       if (!res?.payload?.ok) {
-        console.log(res)
+        console.log(res);
         toast.error(res?.payload.data);
       }
     },

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useId } from 'react';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
@@ -6,6 +6,7 @@ import { addLink, getLinkStatistic } from '@/redux/features/linkSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styles from '@/styles/Home.module.css';
 import HomeTemplate from '@/templates/Main/Index';
+import { linkUtil } from '@/utils/linkUtil';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
@@ -14,7 +15,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
-
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
@@ -50,27 +50,31 @@ const Home = () => {
       return errors;
     },
     onSubmit: async (values, { setFieldValue }) => {
+      // note: client generate short url
       if (!values.link.trim()) return;
-      const res = await dispatch(addLink({ link: values.link }));
-      if (res?.meta?.requestStatus === 'fulfilled') {
-        const id = res?.payload?.data.id ?? '';
-        const link = res?.payload?.data.link ?? '';
-        const shortLink = res?.payload?.data.shortLink ?? '';
-        const newLinkHistory = [];
-        const finalLinkHistory = [];
-        newLinkHistory = [{ id: id, link: link, shortLink: shortLink }, ...linkHistory];
-        // limit 6
-        if (newLinkHistory.length > 6) {
-          finalLinkHistory = newLinkHistory.slice(0, newLinkHistory.length - 1);
-        } else {
-          finalLinkHistory = newLinkHistory;
-        }
-        setFieldValue('link', '');
-        // save to state
-        setLinkHistory(finalLinkHistory);
-        // save to local storage
-        localStorage.setItem('linkHistory', JSON.stringify(finalLinkHistory));
+      const data = {
+        link: values.link,
+        shortLink: await linkUtil.getUniqueShortLink(),
+      };
+      dispatch(addLink(data));
+      // set link history
+      const newLinkHistory = [];
+      const finalLinkHistory = [];
+      newLinkHistory = [
+        { id: data.shortLink, link: data.link, shortLink: data.shortLink },
+        ...linkHistory,
+      ];
+      // limit 6
+      if (newLinkHistory.length > 6) {
+        finalLinkHistory = newLinkHistory.slice(0, newLinkHistory.length - 1);
+      } else {
+        finalLinkHistory = newLinkHistory;
       }
+      setFieldValue('link', '');
+      // save to state
+      setLinkHistory(finalLinkHistory);
+      // save to local storage
+      localStorage.setItem('linkHistory', JSON.stringify(finalLinkHistory));
     },
   });
 
