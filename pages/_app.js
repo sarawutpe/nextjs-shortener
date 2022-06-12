@@ -2,7 +2,7 @@ import '../styles/globals.css';
 import { store } from '../redux/store';
 import { Provider } from 'react-redux';
 import { ThemeProvider, createTheme } from '@mui/material';
-import theme from '@/templates/theme';
+import globalTheme from '@/templates/globalTheme';
 import { SWRConfig, useSWR } from 'swr';
 import fetchJson from 'hoc/fetchJson';
 
@@ -17,7 +17,7 @@ const MyApp = ({ Component, pageProps }) => {
           },
         }}
       >
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={globalTheme}>
           <Provider store={store}>
             <Component {...pageProps} />
           </Provider>

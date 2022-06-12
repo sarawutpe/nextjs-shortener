@@ -6,7 +6,7 @@ const Header = () => {
   return (
     <>
       <div className={styles.header}>
-        <Typography variant="h2" align="center">
+        <Typography variant="h3" align="center">
           Free URL Shortener
         </Typography>
       </div>

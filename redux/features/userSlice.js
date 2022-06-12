@@ -1,10 +1,10 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import httpClient from '@/utils/HttpClient';
-import { store } from '@/redux/store';
 
 const initialState = {
   getUserState: {},
-  updateUserState: {}
+  updateUserState: {},
+  updatePasswordState: {},
 };
 
 export const getUser = createAsyncThunk('user/getUser', async (payload) => {
@@ -23,7 +23,7 @@ export const updatePassword = createAsyncThunk('user/updatePassword', async (pay
   const id = payload.id;
   const { data } = await httpClient.put(`/user/password/${id}`, payload);
   return data;
-})
+});
 
 export const userSlice = createSlice({
   name: 'url',
@@ -33,6 +33,14 @@ export const userSlice = createSlice({
     // get user
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.getUserState = action.payload;
+    });
+    // update user
+    builder.addCase(updateUser.fulfilled, (state, action) => {
+      state.updateUserState = action.payload;
+    });
+    // update password
+    builder.addCase(updatePassword.fulfilled, (state, action) => {
+      state.updatePasswordState = action.payload;
     });
   },
 });

@@ -23,8 +23,8 @@ const Login = () => {
 
   const formik = useFormik({
     initialValues: {
-      username: '',
-      password: '',
+      username: 'admin',
+      password: '1234',
     },
     validate: (values) => {
       const errors = {};
@@ -73,7 +73,7 @@ const Login = () => {
             alignItems: 'center',
           }}
         >
-          <Box my={1}>
+          <Box display="flex" flexDirection="column" alignItems="center" my={1}>
             <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
               <AdminPanelSettingsIcon />
             </Avatar>
@@ -81,6 +81,7 @@ const Login = () => {
               Login
             </Typography>
           </Box>
+
           <form onSubmit={formik.handleSubmit}>
             <TextField
               type="text"

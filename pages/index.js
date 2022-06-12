@@ -13,6 +13,8 @@ import Card from '@mui/material/Card';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
+import Grid from '@mui/material/Grid';
+
 import BarChartIcon from '@mui/icons-material/BarChart';
 import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
@@ -89,7 +91,10 @@ const Home = () => {
       <HomeTemplate>
         {/* generate link */}
         <form onSubmit={formik.handleSubmit}>
-          <Stack direction="row" spacing={2}>
+          <Stack
+            direction={{ xs: 'column', sm: 'column', md: 'row' }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+          >
             <TextField
               type="text"
               variant="filled"
@@ -107,51 +112,59 @@ const Home = () => {
             </Button>
           </Stack>
         </form>
+
         {/* link history */}
         <Box display="flex" flexDirection="column" mt={3} mb={8}>
           {linkHistory.length ? (
             linkHistory.map((row, index) => (
-              <Box key={index}>
-                <Box
-                  sx={{
-                    display: 'grid',
-                    gridTemplateColumns: '700px 280px 1fr',
-                    gap: 2,
-                    alignItems: 'center',
-                    background: '#edf2fe',
-                    p: 1,
-                    mb: 1,
-                    borderRadius: 2,
-                  }}
+              <Box key={index} sx={{ width: '100%' }}>
+                <Grid
+                  sx={{}}
+                  mb={1}
+                  bgcolor="#edf2fe"
+                  borderRadius={2}
+                  container
+                  alignItems="center"
+                  columnSpacing={{ xs: 1, sm: 2, md: 3 }}
                 >
-                  <Box>
-                    <Typography variant="body1" className={styles.textellipsis}>
-                      {row.link}
-                    </Typography>
-                  </Box>
-                  <Link
-                    href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
-                    underline="hover"
-                    target="_blank"
-                  >
-                    <Typography variant="body1" className={styles.textellipsis} mr={1}>
-                      {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
-                    </Typography>
-                  </Link>
-                  <Box>
-                    <CopyToClipboard text={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}>
-                      <Button
-                        onClick={() => handelCopied(row.id)}
-                        type="button"
-                        variant="contained"
-                        color={copied === row.id ? 'success' : 'primary'}
-                        fullWidth
+                  <Grid item xs={12} sm={12} md={5}>
+                    <Box p={1}>
+                      <Typography variant="body1" className={styles.textellipsis}>
+                        {row.link}
+                      </Typography>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} sm={12} md={5}>
+                    <Box p={1}>
+                      <Link
+                        href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
+                        underline="hover"
+                        target="_blank"
                       >
-                        {copied === row.id ? 'Copied' : 'Copy'}
-                      </Button>
-                    </CopyToClipboard>
-                  </Box>
-                </Box>
+                        <Typography variant="body1" className={styles.textellipsis} mr={1}>
+                          {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
+                        </Typography>
+                      </Link>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12} sm={12} md={2}>
+                    <Box p={1}>
+                      <CopyToClipboard text={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}>
+                        <Button
+                          onClick={() => handelCopied(row.id)}
+                          type="button"
+                          variant="contained"
+                          color={copied === row.id ? 'success' : 'primary'}
+                          fullWidth
+                        >
+                          {copied === row.id ? 'Copied' : 'Copy'}
+                        </Button>
+                      </CopyToClipboard>
+                    </Box>
+                  </Grid>
+                </Grid>
               </Box>
             ))
           ) : (
@@ -159,7 +172,14 @@ const Home = () => {
           )}
         </Box>
         {/* link statistic */}
-        <Stack direction="row" spacing={2}>
+
+        {/* direction={{ xs: 'column', sm: 'column', md: 'row' }}
+            spacing={{ xs: 1, sm: 2, md: 4 }}
+             */}
+        <Stack
+          direction={{ xs: 'column', sm: 'column', md: 'row' }}
+          spacing={{ xs: 1, sm: 2, md: 4 }}
+        >
           <Card sx={{ width: '100%' }}>
             <Box display="flex" alignItems="center">
               <Box py={2} px={4}>

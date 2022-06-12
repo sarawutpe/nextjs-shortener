@@ -15,7 +15,7 @@ import Footer from './Footer';
 const Index = (props) => {
   const { children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('lg'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -34,6 +34,17 @@ const Index = (props) => {
         draggable
         pauseOnHover={false}
       />
+
+      {isSmUp ? (
+        <center>
+          <p>sm up</p>
+        </center>
+      ) : (
+        <center>
+          <p>none</p>
+        </center>
+      )}
+
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
         <Box component="nav" sx={{ width: { sm: 256 }, flexShrink: { sm: 0 } }}>
