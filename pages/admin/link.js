@@ -20,16 +20,22 @@ import EditIcon from '@mui/icons-material/Edit';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import useUser from '@/hoc/useUser';
-import { addUrl, getUrl, updateUrl, deleteUrl, multiDeleteUrl } from '@/redux/features/urlSlice';
+import {
+  addLink,
+  getLink,
+  updateLink,
+  deleteLink,
+  multiDeleteLink,
+} from '@/redux/features/linkSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
 import MuiDialog from '@/components/MuiDialog';
 
-const Url = () => {
+const Link = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
   const router = useRouter;
 
-  const getUrlState = useSelector((state) => state.url?.getUrlState);
+  const getLinkState = useSelector((state) => state.link?.getLinkState);
 
   // add mode dialog
   const [openAddDialog, setOpenAddDialog] = useState(false);
@@ -44,8 +50,8 @@ const Url = () => {
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const handleOpenEditDialog = (row) => {
     editFormik.setFieldValue('id', row.id);
-    editFormik.setFieldValue('url', row.url);
-    editFormik.setFieldValue('shortUrl', row.shortUrl);
+    editFormik.setFieldValue('link', row.link);
+    editFormik.setFieldValue('shortLink', row.shortLink);
     editFormik.setFieldValue('view', row.view);
     setOpenEditDialog(true);
   };
@@ -69,18 +75,18 @@ const Url = () => {
           </Button>
           <Button
             onClick={() => {
-              if (deleteUrlList.length) {
-                if (confirm(`คุณต้องการลบทั้งหมด ${deleteUrlList.length} รายการ`)) {
-                  dispatch(multiDeleteUrl({ urlList: deleteUrlList }));
+              if (deleteLinkList.length) {
+                if (confirm(`คุณต้องการลบทั้งหมด ${deleteLinkList.length} รายการ`)) {
+                  dispatch(multiDeleteLink({ linkList: deleteLinkList }));
                 }
               }
             }}
             variant="text"
             size="small"
-            disabled={!deleteUrlList.length}
+            disabled={!deleteLinkList.length}
             startIcon={<DeleteIcon />}
           >
-            ลบทั้งหมด {deleteUrlList.length}
+            ลบทั้งหมด {deleteLinkList.length}
           </Button>
         </Stack>
       </GridToolbarContainer>
@@ -89,8 +95,8 @@ const Url = () => {
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 100 },
-    { field: 'url', headerName: 'URL', width: 300 },
-    { field: 'shortUrl', headerName: 'Short URL', width: 120 },
+    { field: 'link', headerName: 'Link', width: 300 },
+    { field: 'shortLink', headerName: 'Short Link', width: 120 },
     { field: 'view', headerName: 'View', width: 120 },
     { field: 'createdAt', headerName: 'Created At', width: 160 },
     { field: 'updatedAt', headerName: 'Updated At', width: 160 },
@@ -105,7 +111,7 @@ const Url = () => {
           <IconButton
             onClick={() => {
               handleOpenEditDialog(row);
-              setDeleteUrlList([]);
+              setDeleteLinkList([]);
             }}
           >
             <EditIcon />
@@ -113,8 +119,8 @@ const Url = () => {
           <IconButton
             onClick={() => {
               if (confirm(`คุณต้องการลบลิ้งก์ไอดี ${row.id}`)) {
-                dispatch(deleteUrl({ id: row.id }));
-                setDeleteUrlList([]);
+                dispatch(deleteLink({ id: row.id }));
+                setDeleteLinkList([]);
               }
             }}
           >
@@ -128,23 +134,23 @@ const Url = () => {
   const addFormik = useFormik({
     initialValues: {
       id: '',
-      url: '',
-      shortUrl: '',
+      link: '',
+      shortLink: '',
       view: 0,
     },
     validate: (values) => {
       const errors = {};
-      if (!values.url) {
-        errors.url = 'Required';
+      if (!values.link) {
+        errors.link = 'Required';
       } else if (
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
-          values.url
+          values.link
         )
       ) {
-        errors.url = 'Invalid URL';
+        errors.link = 'Invalid Link';
       }
-      if (values.shortUrl && !/[A-Za-z0-9]$/i.test(values.shortUrl)) {
-        errors.shortUrl = 'Enter A-Za-z0-9';
+      if (values.shortLink && !/[A-Za-z0-9]$/i.test(values.shortLink)) {
+        errors.shortLink = 'Enter A-Za-z0-9';
       }
       if (!values.view && values.view != 0) {
         errors.view = 'Required';
@@ -156,11 +162,11 @@ const Url = () => {
     onSubmit: async (values, { resetForm }) => {
       handleCloseAddDialog();
       const data = {
-        url: values.url,
-        shortUrl: values.shortUrl,
+        link: values.link,
+        shortLink: values.shortLink,
         view: values.view,
       };
-      const res = await dispatch(addUrl(data));
+      const res = await dispatch(addLink(data));
       // alert
       if (!res?.payload?.ok) {
         toast.error(res?.payload.data);
@@ -172,25 +178,25 @@ const Url = () => {
   const editFormik = useFormik({
     initialValues: {
       id: '',
-      url: '',
-      shortUrl: '',
+      link: '',
+      shortLink: '',
       view: 0,
     },
     validate: (values) => {
       const errors = {};
-      if (!values.url) {
-        errors.url = 'Required';
+      if (!values.link) {
+        errors.link = 'Required';
       } else if (
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
-          values.url
+          values.link
         )
       ) {
-        errors.url = 'Invalid URL';
+        errors.link = 'Invalid Link';
       }
-      if (!values.shortUrl) {
-        errors.shortUrl = 'Required';
-      } else if (!/[A-Za-z0-9]$/i.test(values.shortUrl)) {
-        errors.shortUrl = 'Enter A-Za-z0-9';
+      if (!values.shortLink) {
+        errors.shortLink = 'Required';
+      } else if (!/[A-Za-z0-9]$/i.test(values.shortLink)) {
+        errors.shortLink = 'Enter A-Za-z0-9';
       }
       if (!values.view && values.view != 0) {
         errors.view = 'Required';
@@ -203,40 +209,39 @@ const Url = () => {
       handleCloseEditDialog();
       const data = {
         id: values.id,
-        url: values.url,
-        shortUrl: values.shortUrl,
+        link: values.link,
+        shortLink: values.shortLink,
         view: values.view,
       };
-      dispatch(updateUrl(data));
+      dispatch(updateLink(data));
     },
   });
 
   useEffect(() => {
-    dispatch(getUrl());
+    dispatch(getLink());
   }, [dispatch, router]);
 
   const [pageSize, setPageSize] = useState(10);
-  const [deleteUrlList, setDeleteUrlList] = useState([]);
+  const [deleteLinkList, setDeleteLinkList] = useState([]);
 
   if (user?.auth) {
     return (
       <AdminTemplate>
         <Head>
-          <title>Admin | URL</title>
+          <title>Admin | Link</title>
         </Head>
-
         {/* table section */}
         <div style={{ height: 600, width: '100%', padding: '8px' }}>
           <DataGrid
             components={{ Toolbar: CustomToolbar }}
             sx={{ overflowX: 'auto', background: '#ffff' }}
-            rows={getUrlState?.data || []}
+            rows={getLinkState?.data || []}
             columns={columns}
             pageSize={pageSize}
             rowsPerPageOptions={[10, 20, 100]}
             checkboxSelection={true}
             onPageSizeChange={(pageSize) => setPageSize(pageSize)}
-            onSelectionModelChange={(rows) => setDeleteUrlList(rows)}
+            onSelectionModelChange={(rows) => setDeleteLinkList(rows)}
             disableSelectionOnClick={true}
           />
         </div>
@@ -246,26 +251,26 @@ const Url = () => {
             <TextField
               type="text"
               variant="filled"
-              label="URL"
+              label="Link"
               margin="none"
-              name="url"
+              name="link"
               fullWidth
-              value={addFormik.values.url}
-              error={addFormik.touched.url && addFormik.errors.url}
-              helperText={addFormik.touched.url && addFormik.errors.url}
+              value={addFormik.values.link}
+              error={addFormik.touched.link && addFormik.errors.link}
+              helperText={addFormik.touched.link && addFormik.errors.link}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
             />
             <TextField
               type="text"
               variant="filled"
-              label="Short URL (Option)"
+              label="Short Link (Option)"
               margin="none"
-              name="shortUrl"
+              name="shortLink"
               fullWidth
-              value={addFormik.values.shortUrl}
-              error={addFormik.touched.shortUrl && addFormik.errors.shortUrl}
-              helperText={addFormik.touched.shortUrl && addFormik.errors.shortUrl}
+              value={addFormik.values.shortLink}
+              error={addFormik.touched.shortLink && addFormik.errors.shortLink}
+              helperText={addFormik.touched.shortLink && addFormik.errors.shortLink}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
             />
@@ -295,26 +300,26 @@ const Url = () => {
             <TextField
               type="text"
               variant="filled"
-              label="URL"
+              label="Link"
               margin="none"
-              name="url"
+              name="link"
               fullWidth
-              value={editFormik.values.url}
-              error={editFormik.touched.url && editFormik.errors.url}
-              helperText={editFormik.touched.url && editFormik.errors.url}
+              value={editFormik.values.link}
+              error={editFormik.touched.link && editFormik.errors.link}
+              helperText={editFormik.touched.link && editFormik.errors.link}
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
             />
             <TextField
               type="text"
               variant="filled"
-              label="Short URL"
+              label="Short Link"
               margin="none"
-              name="shortUrl"
+              name="shortLink"
               fullWidth
-              value={editFormik.values.shortUrl}
-              error={editFormik.touched.shortUrl && editFormik.errors.shortUrl}
-              helperText={editFormik.touched.shortUrl && editFormik.errors.shortUrl}
+              value={editFormik.values.shortLink}
+              error={editFormik.touched.shortLink && editFormik.errors.shortLink}
+              helperText={editFormik.touched.shortLink && editFormik.errors.shortLink}
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
             />
@@ -332,12 +337,7 @@ const Url = () => {
               onBlur={editFormik.handleBlur}
             />
             <Stack my={2}>
-              <Button
-                type="submit"
-                variant="contained"
-                color="primary"
-                fullWidth
-              >
+              <Button type="submit" variant="contained" color="primary" fullWidth>
                 แก้ไข
               </Button>
             </Stack>
@@ -349,4 +349,4 @@ const Url = () => {
   return <></>;
 };
 
-export default Url;
+export default Link;

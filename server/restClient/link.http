@@ -1,0 +1,36 @@
+# create link
+POST http://localhost:8085/api/v2/link HTTP/1.1
+Content-Type: application/json
+
+{
+    "link": "https://name.com",
+    "shortlink": ""
+}
+###
+
+# get link
+GET http://localhost:8085/api/v2/link HTTP/1.1
+###
+
+# get link by short link
+GET http://localhost:8085/api/v2/link/short_link/VqWZpN HTTP/1.1
+###
+
+# get link statistic
+GET http://localhost:8085/api/v2/link/statistic HTTP/1.1
+###
+
+# update link
+PUT http://localhost:8085/api/v2/link/11 HTTP/1.1
+Content-Type: application/json
+
+{
+    "link": "https://name.com",
+    "shortlink": "newLink"
+}
+###
+
+# delete link
+DELETE http://localhost:8085/api/v2/link/30 HTTP/1.1
+###
+

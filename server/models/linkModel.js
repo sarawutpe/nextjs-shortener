@@ -1,16 +1,16 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../db_config');
 
-const Url = sequelize.define('urls', {
+const Link = sequelize.define('links', {
   id: {
     type: DataTypes.INTEGER(11),
     primaryKey: true,
     autoIncrement: true,
   },
-  url: {
+  link: {
     type: DataTypes.STRING(255),
   },
-  shortUrl: {
+  shortLink: {
     type: DataTypes.STRING(255),
   },
   view: {
@@ -25,7 +25,7 @@ const Url = sequelize.define('urls', {
 });
 
 (async () => {
-  await Url.sync({ force: false });
+  await Link.sync({ force: false });
 })();
 
-module.exports = Url;
+module.exports = Link;

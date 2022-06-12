@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
 import { useFormik } from 'formik';
-import { addUrl, getUrlStatistic } from '@/redux/features/urlSlice';
+import { addLink, getLinkStatistic } from '@/redux/features/linkSlice';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
 import styles from '@/styles/Home.module.css';
 import HomeTemplate from '@/templates/Main/Index';
@@ -18,8 +18,8 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const urlStatistic = useSelector((state) => state.url.urlStatistic);
-  const [urlHistory, setUrlHistory] = useState([]);
+  const linkStatistic = useSelector((state) => state.link.linkStatistic);
+  const [linkHistory, setLinkHistory] = useState([]);
   const [copied, setCopied] = useState('');
 
   const handelCopied = (id) => {
@@ -32,52 +32,52 @@ const Home = () => {
 
   const formik = useFormik({
     initialValues: {
-      url: '',
+      link: '',
     },
     validate: (values) => {
       const errors = {};
       if (
-        values.url &&
+        values.link &&
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
-          values.url
+          values.link
         )
       ) {
-        errors.url = true;
+        errors.link = true;
       }
 
       return errors;
     },
     onSubmit: async (values, { setFieldValue }) => {
-      if (!values.url.trim()) return;
-      const res = await dispatch(addUrl({ url: values.url }));
+      if (!values.link.trim()) return;
+      const res = await dispatch(addLink({ link: values.link }));
       if (res?.meta?.requestStatus === 'fulfilled') {
         const id = res?.payload?.data.id ?? '';
-        const url = res?.payload?.data.url ?? '';
-        const shortUrl = res?.payload?.data.shortUrl ?? '';
-        const newUrlHistory = [];
-        const finalUrlHistory = [];
-        newUrlHistory = [{ id: id, url: url, shortUrl: shortUrl }, ...urlHistory];
+        const link = res?.payload?.data.link ?? '';
+        const shortLink = res?.payload?.data.shortLink ?? '';
+        const newLinkHistory = [];
+        const finalLinkHistory = [];
+        newLinkHistory = [{ id: id, link: link, shortLink: shortLink }, ...linkHistory];
         // limit 6
-        if (newUrlHistory.length > 6) {
-          finalUrlHistory = newUrlHistory.slice(0, newUrlHistory.length - 1);
+        if (newLinkHistory.length > 6) {
+          finalLinkHistory = newLinkHistory.slice(0, newLinkHistory.length - 1);
         } else {
-          finalUrlHistory = newUrlHistory;
+          finalLinkHistory = newLinkHistory;
         }
-        setFieldValue('url', '');
+        setFieldValue('link', '');
         // save to state
-        setUrlHistory(finalUrlHistory);
+        setLinkHistory(finalLinkHistory);
         // save to local storage
-        localStorage.setItem('urlHistory', JSON.stringify(finalUrlHistory));
+        localStorage.setItem('linkHistory', JSON.stringify(finalLinkHistory));
       }
     },
   });
 
   useEffect(() => {
-    dispatch(getUrlStatistic());
-    // restore url history
-    const history = localStorage.getItem('urlHistory');
+    dispatch(getLinkStatistic());
+    // restore link history
+    const history = localStorage.getItem('linkHistory');
     if (history) {
-      setUrlHistory(JSON.parse(history));
+      setLinkHistory(JSON.parse(history));
     }
   }, []);
 
@@ -87,18 +87,18 @@ const Home = () => {
         <title>Create Next App</title>
       </Head>
       <HomeTemplate>
-        {/* generate url */}
+        {/* generate link */}
         <form onSubmit={formik.handleSubmit}>
           <Stack direction="row" spacing={2}>
             <TextField
               type="text"
               variant="filled"
-              label="URL"
+              label="Link"
               margin="none"
-              name="url"
+              name="link"
               fullWidth
-              value={formik.values.url}
-              error={formik.touched.url && formik.errors.url}
+              value={formik.values.link}
+              error={formik.touched.link && formik.errors.link}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />
@@ -107,10 +107,10 @@ const Home = () => {
             </Button>
           </Stack>
         </form>
-        {/* url history */}
+        {/* link history */}
         <Box display="flex" flexDirection="column" mt={3} mb={8}>
-          {urlHistory.length ? (
-            urlHistory.map((row, index) => (
+          {linkHistory.length ? (
+            linkHistory.map((row, index) => (
               <Box key={index}>
                 <Box
                   sx={{
@@ -126,20 +126,20 @@ const Home = () => {
                 >
                   <Box>
                     <Typography variant="body1" className={styles.textellipsis}>
-                      {row.url}
+                      {row.link}
                     </Typography>
                   </Box>
                   <Link
-                    href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
+                    href={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
                     underline="hover"
                     target="_blank"
                   >
                     <Typography variant="body1" className={styles.textellipsis} mr={1}>
-                      {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}
+                      {`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}
                     </Typography>
                   </Link>
                   <Box>
-                    <CopyToClipboard text={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortUrl}`}>
+                    <CopyToClipboard text={`${process.env.NEXT_PUBLIC_DOMAIN}/${row.shortLink}`}>
                       <Button
                         onClick={() => handelCopied(row.id)}
                         type="button"
@@ -158,7 +158,7 @@ const Home = () => {
             <></>
           )}
         </Box>
-        {/* url statistic */}
+        {/* link statistic */}
         <Stack direction="row" spacing={2}>
           <Card sx={{ width: '100%' }}>
             <Box display="flex" alignItems="center">
@@ -168,7 +168,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Traffic</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {urlStatistic?.data?.allTraffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allTraffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>
@@ -181,7 +181,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Link</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {urlStatistic?.data?.allLink.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allLink.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>

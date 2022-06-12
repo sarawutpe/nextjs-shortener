@@ -13,7 +13,7 @@ export const categories = [
         path: '/admin',
         icon: <DashboardIcon />,
       },
-      { id: 'URL', path: '/admin/url', icon: <AddLinkIcon /> },
+      { id: 'Link', path: '/admin/link', icon: <AddLinkIcon /> },
     ],
   },
   {

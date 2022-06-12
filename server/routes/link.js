@@ -1,15 +1,14 @@
 const express = require('express');
 const router = express.Router();
 const { Sequelize, Op, NOW } = require('sequelize');
-const bcrypt = require('bcrypt');
 const { customAlphabet } = require('nanoid');
-const Url = require('../models/urlModel');
+const Link = require('../models/linkModel');
 
-const shortUrlExists = async (shortUrl) => {
+const shortLinkExists = async (shortLink) => {
   try {
-    const result = await Url.findOne({ where: { shortUrl: shortUrl } });
+    const result = await Link.findOne({ where: { shortLink: shortLink } });
     if (result) {
-      throw new Error('Short URL already exists');
+      throw new Error('Short Link already exists');
     }
     return;
   } catch (error) {
@@ -17,25 +16,25 @@ const shortUrlExists = async (shortUrl) => {
   }
 };
 
-// create url
-router.post('/url', async (req, res) => {
+// create link
+router.post('/link', async (req, res) => {
   try {
-    const { url, shortUrl, view } = req.body;
-    const uniqueUrl = customAlphabet(
+    const { Link, shortLink, view } = req.body;
+    const uniqueLink = customAlphabet(
       '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
       6
     );
     const data = {
-      url: url,
-      shortUrl: shortUrl ? shortUrl : uniqueUrl(),
+      Link: Link,
+      shortLink: shortLink ? shortLink : uniqueLink(),
       view: view,
     };
-    // check short url already exists
-    const checkShortUrlExists = await shortUrlExists(data.shortUrl);
-    if (checkShortUrlExists) {
-      res.json({ ok: false, data: checkShortUrlExists });
+    // check short link already exists
+    const checkShortLinkExists = await shortLinkExists(data.shortLink);
+    if (checkShortLinkExists) {
+      res.json({ ok: false, data: checkShortLinkExists });
     } else {
-      const result = await Url.create(data);
+      const result = await Link.create(data);
       res.json({ ok: true, data: result });
     }
   } catch (error) {
@@ -43,10 +42,10 @@ router.post('/url', async (req, res) => {
   }
 });
 
-// get url
-router.get('/url', async (req, res) => {
+// get link
+router.get('/link', async (req, res) => {
   try {
-    const result = await Url.findAll({
+    const result = await Link.findAll({
       order: [['id', 'DESC']],
     });
     res.json({ ok: true, data: result });
@@ -55,19 +54,19 @@ router.get('/url', async (req, res) => {
   }
 });
 
-// get url by short url
-router.get('/url/short_url/:query', async (req, res) => {
+// get link by short link
+router.get('/link/short_Link/:query', async (req, res) => {
   try {
     const query = req.params.query;
-    // find one url
-    const findOneUrl = await Url.findOne({ where: { shortUrl: query } });
+    // find one link
+    const findOneLink = await Link.findOne({ where: { shortLink: query } });
     // add view
-    const addView = await Url.update(
-      { view: findOneUrl?.view + 1 },
-      { where: { id: findOneUrl?.id } }
+    const addView = await Link.update(
+      { view: findOneLink?.view + 1 },
+      { where: { id: findOneLink?.id } }
     );
-    if (findOneUrl && addView) {
-      res.json({ ok: true, data: findOneUrl });
+    if (findOneLink && addView) {
+      res.json({ ok: true, data: findOneLink });
     } else {
       res.json({ ok: false, data: result });
     }
@@ -76,44 +75,39 @@ router.get('/url/short_url/:query', async (req, res) => {
   }
 });
 
-// get url statistic
-router.get('/url/statistic', async (req, res) => {
+// get link statistic
+router.get('/link/statistic', async (req, res) => {
   try {
     // all traffic
-    let allTraffic = await Url.findOne({
+    let allTraffic = await Link.findOne({
       attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
     });
     allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
     // all link
-    let allLink = await Url.count();
+    let allLink = await Link.count();
     // top traffic
-    let topTraffic = await Url.findOne({
+    let topTraffic = await Link.findOne({
       attributes: [[Sequelize.fn('MAX', Sequelize.col('view')), 'top_traffic']],
     });
     topTraffic = parseInt(await topTraffic?.dataValues?.top_traffic);
-
-
     // to day link
-    let todayLink = await Url.findAll({
-      attributes: [
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'links']
-      ],
+    let todayLink = await Link.findOne({
+      attributes: [[Sequelize.fn('COUNT', Sequelize.col('id')), 'link']],
       where: {
         createdAt: {
-          [Op.gte]: '2022-06-12'
-        }
-      }
-    })
-    
+          [Op.gte]: Sequelize.fn('CURRENT_DATE'),
+        },
+      },
+    });
+    todayLink = parseInt(await todayLink?.dataValues?.link);
     // historical chart
-    let historicalChart = await Url.findAll({
+    let historicalChart = await Link.findAll({
       attributes: [
         [Sequelize.col('createdAt'), 'date'],
         [Sequelize.fn('COUNT', Sequelize.col('id')), 'link'],
       ],
       group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
     });
-
     const data = {
       allTraffic: allTraffic,
       allLink: allLink,
@@ -121,67 +115,51 @@ router.get('/url/statistic', async (req, res) => {
       topdayLink: todayLink,
       historicalChart: historicalChart,
     };
-
     res.json({ ok: true, data: data });
-
-    // // all traffic
-    // let allTraffic = await Url.findOne({
-    //   attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
-    // });
-    // allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
-    // // all link
-    // let allLink = await Url.count();
-    // const data = {
-    //   allTraffic: allTraffic,
-    //   allLink: allLink,
-    // };
-    // res.json({ ok: true, data: data });
   } catch (error) {
     res.json({ ok: false, data: error.message });
   }
 });
 
-// get url all statistic
-router.get('/url/allstatistic', async (req, res) => {
+// get link all statistic
+router.get('/link/allstatistic', async (req, res) => {
   try {
     // all traffic
-    let allTraffic = await Url.findOne({
+    let allTraffic = await Link.findOne({
       attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
     });
     allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
     // all link
-    let allLink = await Url.count();
+    let allLink = await Link.count();
     // top traffic
-    let topTraffic = await Url.findOne({
+    let topTraffic = await Link.findOne({
       attributes: [[Sequelize.fn('MAX', Sequelize.col('view')), 'top_traffic']],
     });
     topTraffic = parseInt(await topTraffic?.dataValues?.top_traffic);
     // historical chart
-    let historicalChart = await Url.findAll({
+    let historicalChart = await Link.findAll({
       attributes: [
         [Sequelize.col('createdAt'), 'date'],
         [Sequelize.fn('COUNT', Sequelize.col('id')), 'links'],
       ],
       group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
     });
-
     const data = {
       allTraffic: allTraffic,
       allLink: allLink,
       topTraffic: topTraffic,
       historicalChart: historicalChart,
     };
-
     res.json({ ok: true, data: data });
   } catch (error) {
     res.json({ ok: false, data: error.message });
   }
 });
 
-// update url
-router.put('/url/:id', async (req, res) => {
+// update link
+router.put('/link/:id', async (req, res) => {
   try {
-    const result = await Url.update(req.body, {
+    const result = await Link.update(req.body, {
       where: { id: req.params.id },
     });
     res.json({ ok: true, data: result });
@@ -190,10 +168,10 @@ router.put('/url/:id', async (req, res) => {
   }
 });
 
-// delete url
-router.delete('/url/:id', async (req, res) => {
+// delete link
+router.delete('/link/:id', async (req, res) => {
   try {
-    const result = Url.destroy({
+    const result = Link.destroy({
       where: { id: req.params.id },
     });
     res.json({ ok: true, data: result });
@@ -202,13 +180,13 @@ router.delete('/url/:id', async (req, res) => {
   }
 });
 
-// multi delete url
-router.put('/url', async (req, res) => {
+// multi delete link
+router.put('/link', async (req, res) => {
   try {
-    const { urlList } = req.body;
-    if (urlList.length) {
-      for await (const id of urlList) {
-        await Url.destroy({ where: { id: id } });
+    const { LinkList } = req.body;
+    if (LinkList.length) {
+      for await (const id of LinkList) {
+        await Link.destroy({ where: { id: id } });
       }
     }
     res.json({ ok: true, data: '' });
