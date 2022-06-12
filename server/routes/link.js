@@ -4,9 +4,24 @@ const { Sequelize, Op, NOW } = require('sequelize');
 const { customAlphabet } = require('nanoid');
 const Link = require('../models/linkModel');
 
-const shortLinkExists = async (shortLink) => {
+const shortLinkExists = async (id, shortLink) => {
   try {
-    const result = await Link.findOne({ where: { shortLink: shortLink } });
+    const result = await Link.findOne({
+      where: {
+        [Op.and]: [
+          {
+            id: {
+              [Op.ne]: id,
+            },
+          },
+          {
+            shortLink: {
+              [Op.eq]: shortLink,
+            },
+          },
+        ],
+      },
+    });
     if (result) {
       throw new Error('Short Link already exists');
     }
@@ -112,11 +127,11 @@ router.get('/link/statistic/:range', async (req, res) => {
       group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
     });
     const data = {
-      allTraffic: allTraffic,
-      allLink: allLink,
-      topTraffic: topTraffic,
-      todayLink: todayLink,
-      historicalChart: historicalChart,
+      allTraffic: allTraffic || 0,
+      allLink: allLink || 0,
+      topTraffic: topTraffic || 0,
+      todayLink: todayLink || 0,
+      historicalChart: historicalChart || [],
     };
     res.json({ ok: true, data: data });
   } catch (error) {
@@ -135,8 +150,8 @@ router.get('/link/statistic', async (req, res) => {
     // all link
     let allLink = await Link.count();
     const data = {
-      allTraffic: allTraffic,
-      allLink: allLink,
+      allTraffic: allTraffic || 0,
+      allLink: allLink || 0,
     };
     res.json({ ok: true, data: data });
   } catch (error) {
@@ -147,10 +162,18 @@ router.get('/link/statistic', async (req, res) => {
 // update link
 router.put('/link/:id', async (req, res) => {
   try {
-    const result = await Link.update(req.body, {
-      where: { id: req.params.id },
-    });
-    res.json({ ok: true, data: result });
+    const id = req.params.id;
+    const { shortLink } = req.body;
+    // check short link already exists
+    const checkShortLinkExists = await shortLinkExists(id, shortLink);
+    if (checkShortLinkExists) {
+      res.json({ ok: false, data: checkShortLinkExists });
+    } else {
+      const result = await Link.update(req.body, {
+        where: { id: id },
+      });
+      res.json({ ok: true, data: result });
+    }
   } catch (error) {
     res.json({ ok: true, data: error.message });
   }

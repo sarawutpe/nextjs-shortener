@@ -17,7 +17,7 @@ const Profile = () => {
   const dispatch = useDispatch();
   const router = useRouter;
 
-  const getUserState = useSelector((state) => state.user.getUserState);
+  const getUserState = useSelector((state) => state?.user?.getUserState);
 
   useEffect(() => {
     dispatch(getUser({ id: user?.id }));

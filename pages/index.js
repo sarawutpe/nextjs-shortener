@@ -18,10 +18,10 @@ import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
 
 const Home = () => {
   const dispatch = useDispatch();
-  const linkStatistic = useSelector((state) => state.link.linkStatistic);
+  const linkStatistic = useSelector((state) => state?.link?.linkStatistic);
   const [linkHistory, setLinkHistory] = useState([]);
   const [copied, setCopied] = useState('');
-  
+
   const handelCopied = (id) => {
     setCopied(id);
     // delay

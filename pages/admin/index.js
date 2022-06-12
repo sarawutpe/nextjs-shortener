@@ -19,9 +19,7 @@ const Dashboard = () => {
   const dispatch = useDispatch();
   const router = useRouter;
 
-  const linkStatistic = useSelector((state) => state.link.linkStatistic);
-
-  console.log(linkStatistic)
+  const linkStatistic = useSelector((state) => state?.link?.linkStatistic);
 
   const [chartRange, setChartRange] = useState('7D');
   const handelchartRange = (value) => {
@@ -69,7 +67,7 @@ const Dashboard = () => {
         </Head>
         <Box sx={{ width: '100%', m: 1 }}>
           <Typography pl={2} variant="h6">
-            Statistics
+            Overview
           </Typography>
 
           {/* item 1 */}

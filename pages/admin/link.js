@@ -205,7 +205,7 @@ const Link = () => {
       }
       return errors;
     },
-    onSubmit: (values) => {
+    onSubmit: async (values) => {
       handleCloseEditDialog();
       const data = {
         id: values.id,
@@ -213,7 +213,12 @@ const Link = () => {
         shortLink: values.shortLink,
         view: values.view,
       };
-      dispatch(updateLink(data));
+      const res = await dispatch(updateLink(data));
+      // alert
+      if (!res?.payload?.ok) {
+        console.log(res)
+        toast.error(res?.payload.data);
+      }
     },
   });
 

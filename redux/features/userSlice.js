@@ -24,40 +24,6 @@ export const updatePassword = createAsyncThunk('user/updatePassword', async (pay
   const { data } = await httpClient.put(`/user/password/${id}`, payload);
   return data;
 })
-// export const addUrl = createAsyncThunk('url/addUrl', async (payload) => {
-//   const { data } = await httpClient.post('/url', payload);
-//   if (data?.ok) {
-//     store.dispatch(getUrl());
-//   }
-//   return data;
-// });
-
-// export const getUrl = createAsyncThunk('url/getUrl', async () => {
-//   const { data } = await httpClient.get('/url');
-//   return data;
-// });
-
-// export const getUrlStatistic = createAsyncThunk('url/getUrlStatistic', async () => {
-//   const { data } = await httpClient.get('/url/statistic');
-//   return data;
-// });
-
-// export const updateUrl = createAsyncThunk('url/updateUrl', async (payload) => {
-//   const id = payload.id;
-//   const { data } = await httpClient.put(`/url/${id}`, payload);
-//   return store.dispatch(getUrl());
-// });
-
-// export const deleteUrl = createAsyncThunk('url/deleteUrl', async (payload) => {
-//   const id = payload.id;
-//   const { data } = await httpClient.delete(`/url/${id}`);
-//   return store.dispatch(getUrl());
-// });
-
-// export const multiDeleteUrl = createAsyncThunk('url/multiDeleteUrl', async (payload) => {
-//   const { data } = await httpClient.put('/url/', payload);
-//   return store.dispatch(getUrl());
-// });
 
 export const userSlice = createSlice({
   name: 'url',

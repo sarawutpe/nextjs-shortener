@@ -37,7 +37,10 @@ export const getLinkStatistic = createAsyncThunk('link/getLinkStatistic', async 
 export const updateLink = createAsyncThunk('link/updateLink', async (payload) => {
   const id = payload.id;
   const { data } = await httpClient.put(`/link/${id}`, payload);
-  return store.dispatch(getLink());
+  if (data?.ok) {
+    store.dispatch(getLink());
+  }
+  return data;
 });
 
 export const deleteLink = createAsyncThunk('link/deleteLink', async (payload) => {
