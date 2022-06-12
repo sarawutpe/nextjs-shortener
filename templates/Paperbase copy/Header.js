@@ -18,16 +18,16 @@ const Header = (props) => {
   const router = useRouter();
 
   const theme = useTheme();
-  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
   return (
     <>
       {/* hamburger menu */}
-      {isLgUp ? null : (
+      {isSmUp ? null : (
         <AppBar color="primary" position="sticky" elevation={0}>
           <Toolbar>
             <Grid container spacing={1} alignItems="center">
-              <Grid sx={{ display: { lg: 'none', xs: 'block' } }} item>
+              <Grid sx={{ display: { sm: 'none', xs: 'block' } }} item>
                 <IconButton
                   color="inherit"
                   aria-label="open drawer"
@@ -47,7 +47,7 @@ const Header = (props) => {
         color="primary"
         position="static"
         elevation={0}
-        sx={{ pt: isLgUp ? 1 : 0, zIndex: 0 }}
+        sx={{ pt: isSmUp ? 1 : 0, zIndex: 0 }}
       >
         <Toolbar>
           <Grid container alignItems="center" spacing={1}>

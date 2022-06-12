@@ -15,7 +15,7 @@ import Footer from './Footer';
 const Index = (props) => {
   const { children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('lg'));
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
@@ -35,10 +35,21 @@ const Index = (props) => {
         pauseOnHover={false}
       />
 
+      {isSmUp ? (
+        <center>
+          <p>sm up</p>
+        </center>
+      ) : (
+        <center>
+          <p>none</p>
+        </center>
+      )}
+
       <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <CssBaseline />
-        <Box component="nav" sx={{ width: { lg: 256 }, flexShrink: { lg: 0 } }}>
-          {isLgUp ? null : (
+        
+        <Box component="nav" sx={{ width: { sm: 256 }, flexShrink: { sm: 0 } }}>
+          {isSmUp ? null : (
             <Navigator
               PaperProps={{ style: { width: 256 } }}
               variant="temporary"
@@ -46,21 +57,20 @@ const Index = (props) => {
               onClose={handleDrawerToggle}
             />
           )}
+
           <Navigator
             PaperProps={{ style: { width: 256 } }}
-            sx={{ display: { lg: 'block', xs: 'none' } }}
+            sx={{ display: { sm: 'block', xs: 'none' } }}
           />
+
         </Box>
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Header onDrawerToggle={handleDrawerToggle} />
-          <Box
-            component="main"
-            sx={{ flex: 1, py: { lg: 3, xs: 1 }, px: { lg: 4, xs: 1 }, bgcolor: '#eaeff' }}
-          >
+          <Box component="main" sx={{ flex: 1, py: 3, px: 4, bgcolor: '#eaeff1' }}>
             {/* begin content */}
             <div style={{ margin: 'auto', overflow: 'hidden' }}>
               <AppBar position="static" color="default" elevation={0}></AppBar>
-              <Toolbar sx={{ m: 1, p: { lg: 1, xs: 0.5 } }}>{children}</Toolbar>
+              <Toolbar sx={{ m: 1 }}>{children}</Toolbar>
             </div>
             {/* end content */}
           </Box>
