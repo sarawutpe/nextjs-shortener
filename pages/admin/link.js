@@ -228,7 +228,6 @@ const Link = () => {
       const res = await dispatch(updateLink(data));
       // alert
       if (!res?.payload?.ok) {
-        console.log(res);
         toast.error(res?.payload.data);
       }
     },
