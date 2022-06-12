@@ -19,13 +19,13 @@ const shortLinkExists = async (shortLink) => {
 // create link
 router.post('/link', async (req, res) => {
   try {
-    const { Link, shortLink, view } = req.body;
+    const { link, shortLink, view } = req.body;
     const uniqueLink = customAlphabet(
       '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
       6
     );
     const data = {
-      Link: Link,
+      link: link,
       shortLink: shortLink ? shortLink : uniqueLink(),
       view: view,
     };
@@ -75,9 +75,10 @@ router.get('/link/short_Link/:query', async (req, res) => {
   }
 });
 
-// get link statistic
-router.get('/link/statistic', async (req, res) => {
+// get private link statistic with param range
+router.get('/link/statistic/:range', async (req, res) => {
   try {
+    let range = req.params.range;
     // all traffic
     let allTraffic = await Link.findOne({
       attributes: [[Sequelize.fn('SUM', Sequelize.col('view')), 'all_traffic']],
@@ -101,7 +102,9 @@ router.get('/link/statistic', async (req, res) => {
     });
     todayLink = parseInt(await todayLink?.dataValues?.link);
     // historical chart
+    const setRange = range == '1D' ? 1 : range == '7D' ? 7 : range == '30D' ? 30 : allLink;
     let historicalChart = await Link.findAll({
+      limit: setRange,
       attributes: [
         [Sequelize.col('createdAt'), 'date'],
         [Sequelize.fn('COUNT', Sequelize.col('id')), 'link'],
@@ -112,7 +115,7 @@ router.get('/link/statistic', async (req, res) => {
       allTraffic: allTraffic,
       allLink: allLink,
       topTraffic: topTraffic,
-      topdayLink: todayLink,
+      todayLink: todayLink,
       historicalChart: historicalChart,
     };
     res.json({ ok: true, data: data });
@@ -121,8 +124,8 @@ router.get('/link/statistic', async (req, res) => {
   }
 });
 
-// get link all statistic
-router.get('/link/allstatistic', async (req, res) => {
+// get public link statistic
+router.get('/link/statistic', async (req, res) => {
   try {
     // all traffic
     let allTraffic = await Link.findOne({
@@ -131,24 +134,9 @@ router.get('/link/allstatistic', async (req, res) => {
     allTraffic = parseInt(await allTraffic?.dataValues?.all_traffic);
     // all link
     let allLink = await Link.count();
-    // top traffic
-    let topTraffic = await Link.findOne({
-      attributes: [[Sequelize.fn('MAX', Sequelize.col('view')), 'top_traffic']],
-    });
-    topTraffic = parseInt(await topTraffic?.dataValues?.top_traffic);
-    // historical chart
-    let historicalChart = await Link.findAll({
-      attributes: [
-        [Sequelize.col('createdAt'), 'date'],
-        [Sequelize.fn('COUNT', Sequelize.col('id')), 'links'],
-      ],
-      group: [Sequelize.fn('DAY', Sequelize.col('createdAt'))],
-    });
     const data = {
       allTraffic: allTraffic,
       allLink: allLink,
-      topTraffic: topTraffic,
-      historicalChart: historicalChart,
     };
     res.json({ ok: true, data: data });
   } catch (error) {
@@ -183,9 +171,9 @@ router.delete('/link/:id', async (req, res) => {
 // multi delete link
 router.put('/link', async (req, res) => {
   try {
-    const { LinkList } = req.body;
-    if (LinkList.length) {
-      for await (const id of LinkList) {
+    const { linkList } = req.body;
+    if (linkList.length) {
+      for await (const id of linkList) {
         await Link.destroy({ where: { id: id } });
       }
     }

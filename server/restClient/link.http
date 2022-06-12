@@ -16,7 +16,11 @@ GET http://localhost:8085/api/v2/link HTTP/1.1
 GET http://localhost:8085/api/v2/link/short_link/VqWZpN HTTP/1.1
 ###
 
-# get link statistic
+# get private link statistic
+GET http://localhost:8085/api/v2/link/statistic/ALL HTTP/1.1
+###
+
+# get public link statistic
 GET http://localhost:8085/api/v2/link/statistic HTTP/1.1
 ###
 

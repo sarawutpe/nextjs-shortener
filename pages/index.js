@@ -21,7 +21,7 @@ const Home = () => {
   const linkStatistic = useSelector((state) => state.link.linkStatistic);
   const [linkHistory, setLinkHistory] = useState([]);
   const [copied, setCopied] = useState('');
-
+  
   const handelCopied = (id) => {
     setCopied(id);
     // delay
@@ -168,7 +168,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Traffic</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {linkStatistic?.data?.allTraffic.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>
@@ -181,7 +181,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Link</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {linkStatistic?.data?.allLink.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allLink?.toLocaleString('en-GB', { timeZone: 'UTC' })}
                 </Typography>
               </Box>
             </Box>

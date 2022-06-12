@@ -1,44 +1,18 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import { useSelector, useDispatch } from 'react-redux';
-import { useFormik } from 'formik';
-
+import { Chart } from 'react-google-charts';
 import Card from '@mui/material/Card';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
 import BarChartIcon from '@mui/icons-material/BarChart';
-import CompareArrowsIcon from '@mui/icons-material/CompareArrows';
-import BubbleChartIcon from '@mui/icons-material/BubbleChart';
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen';
-
-import {
-  DataGrid,
-  GridToolbarContainer,
-  GridToolbarColumnsButton,
-  GridToolbarFilterButton,
-  GridToolbarExport,
-  GridToolbarDensitySelector,
-} from '@mui/x-data-grid';
-import IconButton from '@mui/material/IconButton';
-import Stack from '@mui/material/Stack';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import useUser from '@/hoc/useUser';
-import {
-  getLinkStatistic,
-  getLink,
-  updateLink,
-  deleteLink,
-  multiDeleteLink,
-} from '@/redux/features/linkSlice';
+import { getLinkStatistic } from '@/redux/features/linkSlice';
 import AdminTemplate from '@/templates/Paperbase/Index';
-import MuiDialog from '@/components/MuiDialog';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
 
 const Dashboard = () => {
   const { user } = useUser();
@@ -47,9 +21,45 @@ const Dashboard = () => {
 
   const linkStatistic = useSelector((state) => state.link.linkStatistic);
 
+  console.log(linkStatistic)
+
+  const [chartRange, setChartRange] = useState('7D');
+  const handelchartRange = (value) => {
+    setChartRange(value);
+  };
+
+  // generate chart data
+  const [chartData, setChartData] = useState([]);
+  useMemo(async () => {
+    return new Promise((resolve, reject) => {
+      try {
+        const data = [];
+        const chart = linkStatistic?.data?.historicalChart || [];
+        if (chart?.length) {
+          // header
+          data.push(['Date', 'Links']);
+          for (let i = 0; i < chart.length; i++) {
+            // parse to local th date
+            const date = new Date(chart[i].date);
+            const localDate = date.toLocaleDateString('th-TH', {
+              year: 'numeric',
+              month: 'numeric',
+              day: 'numeric',
+            });
+            data.push([localDate, chart[i].link]);
+            resolve();
+          }
+          setChartData(data);
+        }
+      } catch (error) {
+        reject();
+      }
+    });
+  }, [linkStatistic]);
+
   useEffect(() => {
-    dispatch(getLinkStatistic());
-  }, [dispatch, router, user]);
+    dispatch(getLinkStatistic({ range: chartRange }));
+  }, [dispatch, router, chartRange]);
 
   if (user?.auth) {
     return (
@@ -57,14 +67,14 @@ const Dashboard = () => {
         <Head>
           <title>Admin | Dashobard</title>
         </Head>
-
         <Box sx={{ width: '100%', m: 1 }}>
           <Typography pl={2} variant="h6">
             Statistics
           </Typography>
 
+          {/* item 1 */}
           <Grid container rowSpacing={1} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
-            <Grid item xs={3}>
+            <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ m: 2 }}>
                 <Box display="flex" justifyContent="space-around" alignItems="center">
                   <Box py={3} px={1}>
@@ -81,28 +91,30 @@ const Dashboard = () => {
                 </Box>
               </Card>
             </Grid>
-
-            <Grid item xs={3}>
+            {/* item 2 */}
+            <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ m: 2 }}>
                 <Box display="flex" justifyContent="space-around" alignItems="center">
                   <Box py={3} px={1}>
-                    <CompareArrowsIcon color="error" fontSize="large" />
+                    <BarChartIcon color="error" fontSize="large" />
                   </Box>
                   <Box py={3} px={1}>
                     <Typography variant="subtitle1">All Link</Typography>
                     <Typography variant="subtitle1" color="gray">
-                      {linkStatistic?.data?.allLink?.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                      {linkStatistic?.data?.allLink?.toLocaleString('en-GB', {
+                        timeZone: 'UTC',
+                      })}
                     </Typography>
                   </Box>
                 </Box>
               </Card>
             </Grid>
-
-            <Grid item xs={3}>
+            {/* item 3 */}
+            <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ m: 2 }}>
                 <Box display="flex" justifyContent="space-around" alignItems="center">
                   <Box py={3} px={1}>
-                    <BubbleChartIcon color="secondary" fontSize="large" />
+                    <BarChartIcon color="secondary" fontSize="large" />
                   </Box>
                   <Box py={3} px={1}>
                     <Typography variant="subtitle1">Top Traffic</Typography>
@@ -115,23 +127,64 @@ const Dashboard = () => {
                 </Box>
               </Card>
             </Grid>
-
-            <Grid item xs={3}>
+            {/* item 4 */}
+            <Grid item xs={12} sm={6} md={3}>
               <Card sx={{ m: 2 }}>
                 <Box display="flex" justifyContent="space-around" alignItems="center">
                   <Box py={3} px={1}>
-                    <CloseFullscreenIcon color="primary" fontSize="large" />
+                    <BarChartIcon color="primary" fontSize="large" />
                   </Box>
                   <Box py={3} px={1}>
                     <Typography variant="subtitle1">Today Link</Typography>
                     <Typography variant="subtitle1" color="gray">
-                      {linkStatistic?.data?.todayLink?.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                      {linkStatistic?.data?.todayLink?.toLocaleString('en-GB', {
+                        timeZone: 'UTC',
+                      })}
                     </Typography>
                   </Box>
                 </Box>
               </Card>
             </Grid>
           </Grid>
+          <Box px={2} display="flex" justifyContent="space-between">
+            <div>
+              <Typography variant="h6">Statistics</Typography>
+            </div>
+            <div>
+              <ButtonGroup variant="contained">
+                <Button onClick={() => handelchartRange('1D')} variant="contained" size="small">
+                  1D
+                </Button>
+                <Button onClick={() => handelchartRange('7D')} variant="contained" size="small">
+                  7D
+                </Button>
+                <Button onClick={() => handelchartRange('30D')} variant="contained" size="small">
+                  30D
+                </Button>
+                <Button onClick={() => handelchartRange('ALL')} variant="contained" size="small">
+                  ALL
+                </Button>
+              </ButtonGroup>
+            </div>
+          </Box>
+          {chartData.length ? (
+            <Box p={2}>
+              <Chart
+                chartType="Bar"
+                width="100%"
+                height="400px"
+                data={chartData}
+                options={{
+                  chart: {
+                    title: `สถิติย้อนหลัง ${chartRange}`,
+                    subtitle: `จำนวนข้อมูลทั้งหมด ${chartData.length || 0} รายการ`,
+                  },
+                }}
+              />
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
       </AdminTemplate>
     );

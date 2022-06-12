@@ -23,9 +23,15 @@ export const getLink = createAsyncThunk('link/getLink', async () => {
   return data;
 });
 
-export const getLinkStatistic = createAsyncThunk('link/getLinkStatistic', async () => {
-  const { data } = await httpClient.get('/link/statistic');
-  return data;
+export const getLinkStatistic = createAsyncThunk('link/getLinkStatistic', async (payload) => {
+  const range = payload?.range;
+  if (range) {
+    const { data } = await httpClient.get(`/link/statistic/${range}`);
+    return data;
+  } else {
+    const { data } = await httpClient.get(`/link/statistic`);
+    return data;
+  }
 });
 
 export const updateLink = createAsyncThunk('link/updateLink', async (payload) => {

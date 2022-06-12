@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import AppBar from '@mui/material/AppBar';
+import Toolbar from '@mui/material/Toolbar';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { ThemeProvider } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -8,10 +10,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { theme } from './Style';
 import Header from './Header';
 import Navigator from './Navigator';
-import Content from './content';
 import Footer from './Footer';
 
 const Index = (props) => {
+  const { children } = props;
   const [mobileOpen, setMobileOpen] = useState(false);
   const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
 
@@ -52,7 +54,12 @@ const Index = (props) => {
         <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <Header onDrawerToggle={handleDrawerToggle} />
           <Box component="main" sx={{ flex: 1, py: 3, px: 4, bgcolor: '#eaeff1' }}>
-            <Content {...props} />
+            {/* begin content */}
+            <div style={{ margin: 'auto', overflow: 'hidden' }}>
+              <AppBar position="static" color="default" elevation={0}></AppBar>
+              <Toolbar sx={{ m: 1 }}>{children}</Toolbar>
+            </div>
+            {/* end content */}
           </Box>
           <Box component="footer" sx={{ p: 2, bgcolor: '#eaeff1' }}>
             <Footer />
