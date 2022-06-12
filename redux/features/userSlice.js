@@ -30,35 +30,10 @@ export const userSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // get user | fullfiled
+    // get user
     builder.addCase(getUser.fulfilled, (state, action) => {
       state.getUserState = action.payload;
     });
-
-    // // add url | fullfiled
-    // builder.addCase(addUrl.fulfilled, (state, action) => {
-    //   state.addUrlState = action.payload;
-    // });
-    // // get url | fullfiled
-    // builder.addCase(getUrl.fulfilled, (state, action) => {
-    //   state.getUrlState = action.payload;
-    // });
-    // // get url statistic | fullfiled
-    // builder.addCase(getUrlStatistic.fulfilled, (state, action) => {
-    //   state.urlStatistic = action.payload;
-    // });
-    // // update url | fullfiled
-    // builder.addCase(updateUrl.fulfilled, (state, action) => {
-    //   state.updateUrlState = action.payload;
-    // });
-    // // delete url | fullfiled
-    // builder.addCase(deleteUrl.fulfilled, (state, action) => {
-    //   state.deleteUrlState = action.payload;
-    // });
-    // // multi delete url | fullfiled
-    // builder.addCase(multiDeleteUrl.fulfilled, (state, action) => {
-    //   state.multiDeleteUrlState = action.payload;
-    // });
   },
 });
 

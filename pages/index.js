@@ -98,7 +98,7 @@ const Home = () => {
               name="link"
               fullWidth
               value={formik.values.link}
-              error={formik.touched.link && formik.errors.link}
+              error={formik.touched.link && Boolean(formik.errors.link)}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
             />

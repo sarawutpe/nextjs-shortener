@@ -1,9 +1,13 @@
-import React from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
 import { withIronSessionSsr } from 'iron-session/next';
 import { sessionOptions } from '@/hoc/sessionOptions';
 
 const Logout = () => {
+  useEffect(() => {
+    const page = '/login';
+    window.location.href = page;
+  }, []);
+
   return <></>;
 };
 
@@ -12,16 +16,13 @@ export const getServerSideProps = withIronSessionSsr(async function getServerSid
   // if user logged in
   if (user?.auth) {
     req.session.destroy();
+  } else {
     return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
+      notFound: true,
     };
   }
-
   return {
-    notFound: true,
+    props: {}, // will be passed to the page component as props
   };
 }, sessionOptions);
 

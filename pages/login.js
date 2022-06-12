@@ -90,7 +90,7 @@ const Login = () => {
               name="username"
               fullWidth
               value={formik.values.username}
-              error={formik.touched.username && formik.errors.username}
+              error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -103,7 +103,7 @@ const Login = () => {
               name="password"
               fullWidth
               value={formik.values.password}
-              error={formik.touched.password && formik.errors.password}
+              error={formik.touched.password && Boolean(formik.errors.password)}
               helperText={formik.touched.password && formik.errors.password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

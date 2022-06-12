@@ -80,7 +80,7 @@ const ChangePassword = () => {
               name="current_password"
               fullWidth
               value={formik.values.current_password}
-              error={formik.touched.current_password && formik.errors.current_password}
+              error={formik.touched.current_password && Boolean(formik.errors.current_password)}
               helperText={formik.touched.current_password && formik.errors.current_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -93,7 +93,7 @@ const ChangePassword = () => {
               name="new_password"
               fullWidth
               value={formik.values.new_password}
-              error={formik.touched.new_password && formik.errors.new_password}
+              error={formik.touched.new_password && Boolean(formik.errors.new_password)}
               helperText={formik.touched.new_password && formik.errors.new_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -106,7 +106,7 @@ const ChangePassword = () => {
               name="confirm_password"
               fullWidth
               value={formik.values.confirm_password}
-              error={formik.touched.confirm_password && formik.errors.confirm_password}
+              error={formik.touched.confirm_password && Boolean(formik.errors.confirm_password)}
               helperText={formik.touched.confirm_password && formik.errors.confirm_password}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

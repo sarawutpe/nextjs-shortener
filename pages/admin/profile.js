@@ -76,7 +76,7 @@ const Profile = () => {
               name="username"
               fullWidth
               value={formik.values.username}
-              error={formik.touched.username && formik.errors.username}
+              error={formik.touched.username && Boolean(formik.errors.username)}
               helperText={formik.touched.username && formik.errors.username}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -89,7 +89,7 @@ const Profile = () => {
               name="name"
               fullWidth
               value={formik.values.name}
-              error={formik.touched.name && formik.errors.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
               helperText={formik.touched.name && formik.errors.name}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}
@@ -102,7 +102,7 @@ const Profile = () => {
               name="email"
               fullWidth
               value={formik.values.email}
-              error={formik.touched.email && formik.errors.email}
+              error={formik.touched.email && Boolean(formik.errors.email)}
               helperText={formik.touched.email && formik.errors.email}
               onChange={formik.handleChange}
               onBlur={formik.handleBlur}

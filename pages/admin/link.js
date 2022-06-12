@@ -261,7 +261,7 @@ const Link = () => {
               name="link"
               fullWidth
               value={addFormik.values.link}
-              error={addFormik.touched.link && addFormik.errors.link}
+              error={addFormik.touched.link && Boolean(addFormik.errors.link)}
               helperText={addFormik.touched.link && addFormik.errors.link}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
@@ -274,7 +274,7 @@ const Link = () => {
               name="shortLink"
               fullWidth
               value={addFormik.values.shortLink}
-              error={addFormik.touched.shortLink && addFormik.errors.shortLink}
+              error={addFormik.touched.shortLink && Boolean(addFormik.errors.shortLink)}
               helperText={addFormik.touched.shortLink && addFormik.errors.shortLink}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
@@ -287,7 +287,7 @@ const Link = () => {
               name="view"
               fullWidth
               value={addFormik.values.view}
-              error={addFormik.touched.view && addFormik.errors.view}
+              error={addFormik.touched.view && Boolean(addFormik.errors.view)}
               helperText={addFormik.touched.view && addFormik.errors.view}
               onChange={addFormik.handleChange}
               onBlur={addFormik.handleBlur}
@@ -310,7 +310,7 @@ const Link = () => {
               name="link"
               fullWidth
               value={editFormik.values.link}
-              error={editFormik.touched.link && editFormik.errors.link}
+              error={editFormik.touched.link && Boolean(editFormik.errors.link)}
               helperText={editFormik.touched.link && editFormik.errors.link}
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
@@ -323,7 +323,7 @@ const Link = () => {
               name="shortLink"
               fullWidth
               value={editFormik.values.shortLink}
-              error={editFormik.touched.shortLink && editFormik.errors.shortLink}
+              error={editFormik.touched.shortLink && Boolean(editFormik.errors.shortLink)}
               helperText={editFormik.touched.shortLink && editFormik.errors.shortLink}
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
@@ -336,7 +336,7 @@ const Link = () => {
               name="view"
               fullWidth
               value={editFormik.values.view}
-              error={editFormik.touched.view && editFormik.errors.view}
+              error={editFormik.touched.view && Boolean(editFormik.errors.view)}
               helperText={editFormik.touched.view && editFormik.errors.view}
               onChange={editFormik.handleChange}
               onBlur={editFormik.handleBlur}
