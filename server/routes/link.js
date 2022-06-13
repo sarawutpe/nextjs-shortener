@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { Sequelize, Op, NOW } = require('sequelize');
+const { Sequelize, Op } = require('sequelize');
 const { customAlphabet } = require('nanoid');
 const Link = require('../models/linkModel');
 
@@ -9,7 +9,7 @@ const shortLinkExists = async (id, shortLink) => {
     const result = await Link.findOne({
       where: {
         [Op.and]: [
-          {
+          id && {
             id: {
               [Op.ne]: id,
             },
@@ -45,7 +45,7 @@ router.post('/link', async (req, res) => {
       view: view || 0,
     };
     // check short link already exists
-    const checkShortLinkExists = await shortLinkExists(data.shortLink);
+    const checkShortLinkExists = await shortLinkExists("",data.shortLink);
     if (checkShortLinkExists) {
       res.json({ ok: false, data: checkShortLinkExists });
     } else {
