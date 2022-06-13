@@ -59,7 +59,7 @@ const Home = () => {
       };
 
       dispatch(addLink(data));
-      
+
       // set link history
       const newLinkHistory = [];
       const finalLinkHistory = [];
@@ -187,7 +187,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Traffic</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', { timeZone: 'UTC' }) ?? 0}
                 </Typography>
               </Box>
             </Box>
@@ -200,7 +200,7 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Link</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {linkStatistic?.data?.allLink?.toLocaleString('en-GB', { timeZone: 'UTC' })}
+                  {linkStatistic?.data?.allLink?.toLocaleString('en-GB', { timeZone: 'UTC' }) ?? 0}
                 </Typography>
               </Box>
             </Box>

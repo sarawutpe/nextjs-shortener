@@ -79,7 +79,7 @@ const Dashboard = () => {
                     <Typography variant="subtitle1" color="gray">
                       {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', {
                         timeZone: 'UTC',
-                      })}
+                      }) ?? 0}
                     </Typography>
                   </Box>
                 </Box>
@@ -97,7 +97,7 @@ const Dashboard = () => {
                     <Typography variant="subtitle1" color="gray">
                       {linkStatistic?.data?.allLink?.toLocaleString('en-GB', {
                         timeZone: 'UTC',
-                      })}
+                      }) ?? 0}
                     </Typography>
                   </Box>
                 </Box>
@@ -115,7 +115,7 @@ const Dashboard = () => {
                     <Typography variant="subtitle1" color="gray">
                       {linkStatistic?.data?.topTraffic?.toLocaleString('en-GB', {
                         timeZone: 'UTC',
-                      })}
+                      }) ?? 0}
                     </Typography>
                   </Box>
                 </Box>
@@ -133,7 +133,7 @@ const Dashboard = () => {
                     <Typography variant="subtitle1" color="gray">
                       {linkStatistic?.data?.todayLink?.toLocaleString('en-GB', {
                         timeZone: 'UTC',
-                      })}
+                      }) ?? 0}
                     </Typography>
                   </Box>
                 </Box>
