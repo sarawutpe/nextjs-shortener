@@ -112,9 +112,7 @@ router.get('/link/statistic/:range', async (req, res) => {
         [Sequelize.col('createdAt'), 'date'],
         [Sequelize.fn('COUNT', Sequelize.col('*')), 'link'],
       ],
-      where: Sequelize.literal(
-        `(createdAt BETWEEN DATE_ADD(NOW(), INTERVAL - 1 DAY) AND NOW())`
-      ),
+      where: Sequelize.literal(`(createdAt BETWEEN DATE_ADD(NOW(), INTERVAL - 1 DAY) AND NOW())`),
       group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });
     todayLink = parseInt(await todayLink?.dataValues?.link);
@@ -130,7 +128,6 @@ router.get('/link/statistic/:range', async (req, res) => {
       ),
       group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });
-
     const data = {
       allTraffic: allTraffic || 0,
       allLink: allLink || 0,
