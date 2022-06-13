@@ -45,7 +45,7 @@ router.post('/link', async (req, res) => {
       view: view || 0,
     };
     // check short link already exists
-    const checkShortLinkExists = await shortLinkExists("",data.shortLink);
+    const checkShortLinkExists = await shortLinkExists('', data.shortLink);
     if (checkShortLinkExists) {
       res.json({ ok: false, data: checkShortLinkExists });
     } else {
@@ -113,7 +113,7 @@ router.get('/link/statistic/:range', async (req, res) => {
         [Sequelize.fn('COUNT', Sequelize.col('*')), 'link'],
       ],
       where: Sequelize.literal(
-        `(createdAt BETWEEN DATE_ADD(CURRENT_DATE, INTERVAL - 1 DAY) AND CURRENT_DATE)`
+        `(createdAt BETWEEN DATE_ADD(NOW(), INTERVAL - 1 DAY) AND NOW())`
       ),
       group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });
@@ -126,7 +126,7 @@ router.get('/link/statistic/:range', async (req, res) => {
         [Sequelize.fn('COUNT', Sequelize.col('*')), 'link'],
       ],
       where: Sequelize.literal(
-        `(createdAt BETWEEN DATE_ADD(CURRENT_DATE, INTERVAL - ${setRange} DAY) AND CURRENT_DATE)`
+        `(createdAt BETWEEN DATE_ADD(NOW(), INTERVAL - ${setRange} DAY) AND NOW())`
       ),
       group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });

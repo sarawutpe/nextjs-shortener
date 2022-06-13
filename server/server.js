@@ -13,7 +13,7 @@ app.use('/api/v2', require('./routes/user'));
 app.use('/api/v2', require('./routes/link'));
 
 // set timezone
-process.env.TZ = 'Asia/Bangkok';
+TZ = 'Asia/Bangkok';
 
 // port
 const PORT = process.env.PORT || 8085;

@@ -18,7 +18,8 @@ const sequelize = new Sequelize(database, username, password, {
     acquire: 30000,
     idle: 10000,
   },
-  logging: false,
+  timezone: '+07:00',
+  logging: true,
 });
 
 // Testing the connection
