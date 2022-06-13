@@ -55,8 +55,11 @@ const Home = () => {
       const data = {
         link: values.link,
         shortLink: await linkUtil.getUniqueShortLink(),
+        view: '',
       };
+
       dispatch(addLink(data));
+      
       // set link history
       const newLinkHistory = [];
       const finalLinkHistory = [];
