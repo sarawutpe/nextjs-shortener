@@ -51,6 +51,11 @@ const Dashboard = () => {
     });
   }, [linkStatistic]);
 
+  const rangeOption1 = '1D';
+  const rangeOption2 = '7D';
+  const rangeOption3 = '30D';
+  const rangeOption4 = 'ALL';
+
   useEffect(() => {
     dispatch(getLinkStatistic({ range: chartRange }));
   }, [dispatch, router, chartRange]);
@@ -146,17 +151,37 @@ const Dashboard = () => {
             </div>
             <div>
               <ButtonGroup variant="contained">
-                <Button onClick={() => handelchartRange('1D')} variant="contained" size="small">
-                  1D
+                <Button
+                  sx={{ bgcolor: chartRange == rangeOption1 ? 'info.main' : 'primary.main' }}
+                  onClick={() => handelchartRange(rangeOption1)}
+                  variant="contained"
+                  size="small"
+                >
+                  {rangeOption1}
                 </Button>
-                <Button onClick={() => handelchartRange('7D')} variant="contained" size="small">
-                  7D
+                <Button
+                  sx={{ bgcolor: chartRange == rangeOption2 ? 'info.main' : 'primary.main' }}
+                  onClick={() => handelchartRange(rangeOption2)}
+                  variant="contained"
+                  size="small"
+                >
+                  {rangeOption2}
                 </Button>
-                <Button onClick={() => handelchartRange('30D')} variant="contained" size="small">
-                  30D
+                <Button
+                  sx={{ bgcolor: chartRange == rangeOption3 ? 'info.main' : 'primary.main' }}
+                  onClick={() => handelchartRange(rangeOption3)}
+                  variant="contained"
+                  size="small"
+                >
+                  {rangeOption3}
                 </Button>
-                <Button onClick={() => handelchartRange('ALL')} variant="contained" size="small">
-                  ALL
+                <Button
+                  sx={{ bgcolor: chartRange == rangeOption4 ? 'info.main' : 'primary.main' }}
+                  onClick={() => handelchartRange(rangeOption4)}
+                  variant="contained"
+                  size="small"
+                >
+                  {rangeOption4}
                 </Button>
               </ButtonGroup>
             </div>

@@ -170,11 +170,8 @@ const Home = () => {
             <></>
           )}
         </Box>
+        
         {/* link statistic */}
-
-        {/* direction={{ xs: 'column', sm: 'column', md: 'row' }}
-            spacing={{ xs: 1, sm: 2, md: 4 }}
-             */}
         <Stack
           direction={{ xs: 'column', sm: 'column', md: 'row' }}
           spacing={{ xs: 1, sm: 2, md: 4 }}
@@ -187,7 +184,8 @@ const Home = () => {
               <Box py={2} px={4}>
                 <Typography variant="subtitle1">All Traffic</Typography>
                 <Typography variant="subtitle2" color="gray">
-                  {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', { timeZone: 'UTC' }) ?? 0}
+                  {linkStatistic?.data?.allTraffic?.toLocaleString('en-GB', { timeZone: 'UTC' }) ??
+                    0}
                 </Typography>
               </Box>
             </Box>
