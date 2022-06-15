@@ -4,6 +4,7 @@ const { Sequelize, Op } = require('sequelize');
 const { customAlphabet } = require('nanoid');
 const Link = require('../models/linkModel');
 
+// function check short url link exists
 const shortLinkExists = async (id, shortLink) => {
   try {
     const result = await Link.findOne({

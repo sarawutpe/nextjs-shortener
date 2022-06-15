@@ -29,7 +29,7 @@ const Home = () => {
     // delay
     setTimeout(() => {
       setCopied('');
-    }, 500);
+    }, 300);
   };
 
   const formik = useFormik({
