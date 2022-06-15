@@ -26,7 +26,7 @@ const Home = () => {
 
   const handelCopied = (id) => {
     setCopied(id);
-    // delay
+    // delay fn
     setTimeout(() => {
       setCopied('');
     }, 300);
