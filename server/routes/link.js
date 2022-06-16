@@ -124,7 +124,7 @@ router.get('/link/statistic/:range', async (req, res) => {
         [Sequelize.col('createdAt'), 'date'],
         [Sequelize.fn('COUNT', Sequelize.col('*')), 'link'],
       ],
-      where: setRange == 1 ? Sequelize.literal(`(DATE(createdAt) = CURDATE())`) : Sequelize.literal(`(createdAt BETWEEN DATE_ADD(NOW(), INTERVAL -${setRange}-1 DAY) AND NOW())`),
+      where: setRange == 1 ? Sequelize.literal(`(DATE(createdAt) = CURDATE())`) : Sequelize.literal(`(createdAt BETWEEN DATE_ADD(CURDATE(), INTERVAL -${setRange}-1 DAY) AND DATE_ADD(CURDATE(), INTERVAL 1 DAY))`),
       group: [Sequelize.fn('DATE', Sequelize.col('createdAt'))],
     });
     const data = {
