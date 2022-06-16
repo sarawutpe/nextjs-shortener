@@ -19,7 +19,7 @@ const sequelize = new Sequelize(database, username, password, {
     idle: 10000,
   },
   timezone: '+07:00',
-  logging: false,
+  logging: true,
 });
 
 // Testing the connection

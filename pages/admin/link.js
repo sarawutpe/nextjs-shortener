@@ -68,7 +68,8 @@ const Link = () => {
           <GridToolbarColumnsButton />
           <GridToolbarFilterButton />
           <GridToolbarDensitySelector />
-          <GridToolbarExport />
+          {/* print cannot exceed 100 in DataGrid  */}
+          <GridToolbarExport printOptions={{ disableToolbarButton: true }} />
         </div>
         <Stack mr={1} direction="row" spacing={1}>
           <Button onClick={handleOpenAddDialog} variant="text" size="small" startIcon={<AddIcon />}>
@@ -252,6 +253,7 @@ const Link = () => {
         {/* table section */}
         <div style={{ height: 600, width: '100%', padding: '8px' }}>
           <DataGrid
+            // componentsProps={{ toolbar: ...CustomToolbar{ printOptions: { disableToolbarButton: true } } }}
             components={{ Toolbar: CustomToolbar }}
             sx={{ overflowX: 'auto', background: '#ffff' }}
             rows={getLinkState?.data || []}
@@ -262,6 +264,7 @@ const Link = () => {
             onPageSizeChange={(pageSize) => setPageSize(pageSize)}
             onSelectionModelChange={(rows) => setDeleteLinkList(rows)}
             disableSelectionOnClick={true}
+            disableVirtualization
           />
         </div>
         {/* add section */}
