@@ -31,7 +31,6 @@ import {
 import AdminTemplate from '@/templates/Paperbase/Index';
 import MuiDialog from '@/components/MuiDialog';
 
-
 const Link = () => {
   const { user } = useUser();
   const dispatch = useDispatch();
@@ -154,6 +153,8 @@ const Link = () => {
       const errors = {};
       if (!values.link) {
         errors.link = 'Required';
+      } else if (!/(http(s?)):\/\//i.test(values.link)) {
+        errors.link = 'Required http:// or https://';
       } else if (
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
           values.link
@@ -198,6 +199,8 @@ const Link = () => {
       const errors = {};
       if (!values.link) {
         errors.link = 'Required';
+      } else if (!/(http(s?)):\/\//i.test(values.link)) {
+        errors.link = 'Required http:// or https://';
       } else if (
         !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
           values.link

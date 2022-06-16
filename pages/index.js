@@ -38,15 +38,13 @@ const Home = () => {
     },
     validate: (values) => {
       const errors = {};
-      if (
-        values.link &&
-        !/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(
-          values.link
-        )
-      ) {
+      // check http:// or https://
+      if(!/(http(s?)):\/\//i.test(values.link)) {
         errors.link = true;
       }
-
+      if (!/^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/i.test(values.link)) {
+        errors.link = true;
+      }
       return errors;
     },
     onSubmit: async (values, { setFieldValue }) => {
